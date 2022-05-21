@@ -58,6 +58,16 @@ Run without arguments to install to the latest version or specify a tag to insta
 		----------------------
 		**/
 
+		installDir := backend.UsePath(viper.GetString("app.install_directory"), "dir")
+
+		// Check if folder exists
+		if _, err := os.Stat(installDir + tagData.GetName()); os.IsNotExist(err) {
+			if err == nil {
+				fmt.Printf("Looks like you already have %s installed.\n", tagData.GetName())
+				os.Exit(1)
+			}
+		}
+
 		// Fetch valid assets from the release.
 		tar, sum, err := backend.GetValidAssets(tagData)
 
@@ -77,7 +87,7 @@ Run without arguments to install to the latest version or specify a tag to insta
 		}
 
 		// Download the assets to the temp directory.
-		tmp := backend.UsePath(viper.GetString("app.temp_storage"), "dir")
+		tmp := backend.UsePath(viper.GetString("app.temp_storage"), "file")
 
 		// If it exists, download the checksum file.
 		if sum != nil {
@@ -115,7 +125,7 @@ Run without arguments to install to the latest version or specify a tag to insta
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		err = backend.ExtractTar(backend.UsePath(viper.GetString("app.install_directory"), "dir"), tarReader)
+		err = backend.ExtractTar(installDir, tarReader)
 
 		defer tarReader.Close()
 
