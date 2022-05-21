@@ -1,0 +1,60 @@
+project_name: proto
+before:
+  hooks:
+    - go mod tidy
+    - go generate ./...
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - 386
+      - amd64
+      - arm
+      - arm64
+    ldflags:
+      - "-s -w"
+      - "-X 'github.com/BitsOfAByte/proto/backend.Version={{.Version}}'"
+      - "-X 'github.com/BitsOfAByte/proto/backend.Commit={{.Commit}}'"
+      - "-X 'github.com/BitsOfAByte/proto/build.Date={{.Date}}'"
+
+archives:
+  - format: zip
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+
+checksum:
+  name_template: "checksums.txt"
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  use: github-native
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^build:"
+      - "^ci:"
+
+brews:
+  - tap:
+      owner: BitsOfAByte
+      name: proto
+
+    commit_author:
+      name: github-actions
+      email: actions@github.com
+
+    commit_msg_template: "chore: Brew formula update for version {{ .Tag }}"
+    description: "Install and manage Proton versions easily"
+    homepage: "https://github.com/BitsOfAByte/proto"
+    license: "GPL-3.0"
+
+release:
+  github:
+    owner: BitsOfAByte
+    name: proto
+  prerelease: auto

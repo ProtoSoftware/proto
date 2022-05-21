@@ -1,0 +1,12 @@
+changes | docs:
+  - "**/*.md"
+  - "*.md*"
+
+changes | ci:
+  - ".github/workflows/**/*"
+
+changes | cmd:
+  - "cmd/**/*"
+
+changes | backend:
+  - "backend/**/*"

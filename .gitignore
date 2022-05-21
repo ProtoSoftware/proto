@@ -1,0 +1,10 @@
+
+# Builds
+dist/
+proto
+*.exe
+
+# Secrets
+*.pem
+*.key
+*.env
