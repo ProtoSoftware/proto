@@ -15,9 +15,9 @@ builds:
       - arm64
     ldflags:
       - "-s -w"
-      - "-X 'github.com/BitsOfAByte/proto/backend.Version={{.Version}}'"
-      - "-X 'github.com/BitsOfAByte/proto/backend.Commit={{.Commit}}'"
-      - "-X 'github.com/BitsOfAByte/proto/build.Date={{.Date}}'"
+      - "-X 'BitsOfAByte/proto/backend.Version={{.Version}}'"
+      - "-X 'BitsOfAByte/proto/backend.Commit={{.Commit}}'"
+      - "-X 'BitsOfAByte/proto/backend.Date={{.Date}}'"
 
 archives:
   - format: zip
@@ -48,7 +48,7 @@ brews:
       name: github-actions
       email: actions@github.com
 
-    commit_msg_template: "chore: Brew formula update for version {{ .Tag }}"
+    commit_msg_template: "build: Brew formula update for version {{ .Tag }}"
     description: "Install and manage Proton versions easily"
     homepage: "https://github.com/BitsOfAByte/proto"
     license: "GPL-3.0"
