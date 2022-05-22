@@ -5,30 +5,30 @@
 class Proto < Formula
   desc "Install and manage Proton versions easily"
   homepage "https://github.com/BitsOfAByte/proto"
-  version "0.4.0"
+  version "0.4.1"
   license "GPL-3.0"
   depends_on :linux
 
   on_linux do
     if Hardware::CPU.arm? && !Hardware::CPU.is_64_bit?
-      url "https://github.com/BitsOfAByte/proto/releases/download/v0.4.0/proto_linux_arm.zip"
-      sha256 "b7b72f4a1e5cf2ea25023cf45b6f592a837400e625c33d5b6ca86966b19f3371"
+      url "https://github.com/BitsOfAByte/proto/releases/download/v0.4.1/proto_linux_arm.zip"
+      sha256 "cf49ccdb00be644c09c476996c02f86681d80ba2e381407bacc010abd5b57fd0"
 
       def install
         bin.install "proto"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/BitsOfAByte/proto/releases/download/v0.4.0/proto_linux_arm64.zip"
-      sha256 "8e228612b4352cc01da020b9ca955d9824c5ff25cf6360b1d89d2106574233e4"
+      url "https://github.com/BitsOfAByte/proto/releases/download/v0.4.1/proto_linux_arm64.zip"
+      sha256 "993f8c605fffed1378c1d4495bd040de728fb2a516f0be6ce59ff0e73daf90b5"
 
       def install
         bin.install "proto"
       end
     end
     if Hardware::CPU.intel?
-      url "https://github.com/BitsOfAByte/proto/releases/download/v0.4.0/proto_linux_amd64.zip"
-      sha256 "826c2b03d167cd53b942a9e8d99f3e7e11654e2ab97bfa50e7d290f83f0e1f80"
+      url "https://github.com/BitsOfAByte/proto/releases/download/v0.4.1/proto_linux_amd64.zip"
+      sha256 "248ea665119a32a40b2891836330a3e1c4815b5c65453802e750b2086ebbf68d"
 
       def install
         bin.install "proto"
