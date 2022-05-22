@@ -52,10 +52,18 @@ Run without arguments to install to the latest version or specify a tag to insta
 			tagData = data
 		}
 
-		// Prompt the user to confirm the install if no -y flag is set.
+		installDir := backend.UsePath(viper.GetString("app.install_directory"), true)
 		yesFlag := rootCmd.Flag("yes").Value.String()
-		if yesFlag != "true" {
-			s, m := backend.HumanReadableSize(backend.GetTotalAssetSize(tagData.Assets))
+		s, m := backend.HumanReadableSize(backend.GetTotalAssetSize(tagData.Assets))
+
+		// Check if folder exists
+		if folderInfo, err := os.Stat(installDir + tagData.GetTagName()); err == nil && folderInfo.IsDir() {
+			resp := backend.Prompt(fmt.Sprintf("Looks like %s is already installed, overwrite? [Est. %v%s] (y/N) ", tagData.GetTagName(), s, m), false)
+
+			if !resp {
+				os.Exit(0)
+			}
+		} else if yesFlag != "true" {
 			resp := backend.Prompt(fmt.Sprintf("Are you sure you want to install %s? [Est. %v%s] (y/N) ", tagData.GetTagName(), s, m), false)
 
 			if !resp {
@@ -69,16 +77,6 @@ Run without arguments to install to the latest version or specify a tag to insta
 		|   Download Logic   |
 		----------------------
 		**/
-
-		installDir := backend.UsePath(viper.GetString("app.install_directory"), true)
-
-		// Check if folder exists
-		if _, err := os.Stat(installDir + tagData.GetName()); os.IsNotExist(err) {
-			if err == nil {
-				fmt.Printf("Looks like you already have %s installed.\n", tagData.GetName())
-				os.Exit(1)
-			}
-		}
 
 		// Fetch valid assets from the release.
 		tar, sum, err := backend.GetValidAssets(tagData)
