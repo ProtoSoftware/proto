@@ -9,7 +9,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-// Format the repository config source.
+// Format the repository config source into a usable format.
+// Splitting the owner and repository apart into two outputs.
 func FmtRepo() (string, string) {
 	repo := viper.GetString("app.proton_source")
 	parts := strings.Split(repo, "/")
@@ -42,6 +43,17 @@ func GetReleaseData(tag string) (*github.RepositoryRelease, error) {
 	}
 
 	return release, nil
+}
+
+// Total Asset size in bytes.
+func GetTotalAssetSize(assets []*github.ReleaseAsset) int64 {
+	var size int
+
+	for _, asset := range assets {
+		size += asset.GetSize()
+	}
+
+	return int64(size)
 }
 
 // Sorts through a release to find valid assets for downloading a release.

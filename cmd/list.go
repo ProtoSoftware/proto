@@ -11,6 +11,7 @@ import (
 	"io/ioutil"
 	"os"
 
+	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -20,7 +21,7 @@ var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Shows a list of installed versions of Proton.",
 	Run: func(cmd *cobra.Command, args []string) {
-		installDir := backend.UsePath(viper.GetString("app.install_directory"), "dir")
+		installDir := backend.UsePath(viper.GetString("app.install_directory"), true)
 
 		// for every directory inside of the install directory,
 		// print the name of the directory.
@@ -30,6 +31,9 @@ var listCmd = &cobra.Command{
 			fmt.Println(err)
 			os.Exit(1)
 		}
+
+		table := tablewriter.NewWriter(os.Stdout)
+		table.SetHeader([]string{"Version", "Size", "Modified"})
 
 		for _, d := range dir {
 
@@ -42,9 +46,10 @@ var listCmd = &cobra.Command{
 
 			hSize, hUnit := backend.HumanReadableSize(size)
 
-			fmt.Printf("Version: %s | Size: %v%s | Modified: %s\n", d.Name(), hSize, hUnit, d.ModTime().Format("2006-01-02 @ 15:04"))
-
+			table.Append([]string{d.Name(), fmt.Sprintf("%v%s", hSize, hUnit), d.ModTime().Format("2006-01-02")})
 		}
+
+		table.Render()
 	},
 }
 

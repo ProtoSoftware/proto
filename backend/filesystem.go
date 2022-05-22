@@ -13,16 +13,16 @@ import (
 	"github.com/spf13/viper"
 )
 
-// Correctly formats a path for the program
-func UsePath(path string, pathType string) string {
+// Correctly formats a path for the program.
+func UsePath(path string, trailSlash bool) string {
 
-	// If the type is a directory, add a trailing slash
-	if path[len(path)-1:] != "/" && pathType == "dir" {
+	// If trail slash is true, add a trailing slash to the path
+	if path[len(path)-1:] != "/" && trailSlash {
 		path = path + "/"
 	}
 
-	// If type is a file, remove the trailing slash
-	if path[len(path)-1:] == "/" && pathType == "file" {
+	// If trail slash is false, remove a trailing slash from the path
+	if path[len(path)-1:] == "/" && !trailSlash {
 		path = path[:len(path)-1]
 	}
 
@@ -45,20 +45,20 @@ func ClearTemp() error {
 	return nil
 }
 
+// Downloads the file from the given URL, following redirects if needed. The final file will be put at the given path
+// and a progress bar will be output to the standard output while downloading.
 func DownloadFile(path string, url string) (os.FileInfo, error) {
 
-	// Create the path if it does not exist
+	// If path doesnt exist create it
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		os.MkdirAll(path, 0755)
-
-		if _, err := os.Stat(path); os.IsNotExist(err) {
+		err := os.MkdirAll(filepath.Dir(path), os.ModePerm)
+		if err != nil {
 			return nil, err
 		}
 	}
 
 	// Create the file
 	out, err := os.Create(path)
-
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +67,6 @@ func DownloadFile(path string, url string) (os.FileInfo, error) {
 
 	// Fetch the file from the URL
 	resp, err := http.Get(url)
-
 	if err != nil {
 		return nil, err
 	}
@@ -81,14 +80,12 @@ func DownloadFile(path string, url string) (os.FileInfo, error) {
 
 	// Write the data to the file
 	_, err = io.Copy(out, reader)
-
 	if err != nil {
 		return nil, err
 	}
 
 	// Close the file
 	out.Close()
-
 	// Check if the file is valid
 	if _, err := os.Stat(path); err != nil {
 		return nil, err
@@ -103,17 +100,23 @@ func DownloadFile(path string, url string) (os.FileInfo, error) {
 // Extracts a tarball to the given path
 func ExtractTar(path string, r io.Reader) error {
 
-	// Create the path if it does not exist
+	// If path doesnt exist create it
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		os.MkdirAll(path, 0755)
+		err := os.MkdirAll(filepath.Dir(path), os.ModePerm)
+		if err != nil {
+			return err
+		}
+	}
 
-		if _, err := os.Stat(path); os.IsNotExist(err) {
+	// If path doesnt exist, create it
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		err := os.MkdirAll(path, 0755)
+		if err != nil {
 			return err
 		}
 	}
 
 	gzr, err := gzip.NewReader(r)
-
 	if err != nil {
 		return err
 	}
@@ -167,6 +170,7 @@ func ExtractTar(path string, r io.Reader) error {
 	}
 }
 
+// Gets the size of the given directory in bytes.
 func DirSize(path string) (int64, error) {
 	var size int64
 	err := filepath.Walk(path, func(_ string, info os.FileInfo, err error) error {
@@ -181,11 +185,8 @@ func DirSize(path string) (int64, error) {
 	return size, err
 }
 
+// Converts the given bytes to a human readable amount of bytes and a unit.
 func HumanReadableSize(bytes int64) (int64, string) {
-	// COnvert the bytes to a human readable file size
-
-	// If the file size is less than 1 KB, return the size
-
 	switch {
 	case bytes < 1024:
 		return bytes, "B"

@@ -19,6 +19,27 @@ var configCmd = &cobra.Command{
 	Short: "Change the configuration of Proto",
 }
 
+// confDirCmd represents the conf-dir command
+var confDirCmd = &cobra.Command{
+	Use:   "dir",
+	Short: "Get the location of the configuration file",
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println(viper.ConfigFileUsed())
+	},
+}
+
+// verboseCmd represents the verbose command
+var verboseCmd = &cobra.Command{
+	Use:       "verbose <bool>",
+	Short:     "Toggle verbose mode",
+	Args:      cobra.ExactArgs(1),
+	ValidArgs: []string{"true", "false"},
+	Run: func(cmd *cobra.Command, args []string) {
+		viper.Set("app.verbose", args[0])
+		viper.WriteConfig()
+	},
+}
+
 // sourceCmd represents the source command
 var sourceCmd = &cobra.Command{
 	Use:     "source <owner/repo>",
@@ -38,12 +59,13 @@ var tempCmd = &cobra.Command{
 	Example: "proto config temp /tmp/proto/",
 	Args:    cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Temp location is now: ", backend.UsePath(args[0], "dir"))
-		viper.Set("app.temp_storage", backend.UsePath(args[0], "dir"))
+		fmt.Println("Temp location is now: ", backend.UsePath(args[0], true))
+		viper.Set("app.temp_storage", backend.UsePath(args[0], true))
 		viper.WriteConfig()
 	},
 }
 
+// checksumCmd represents the checksum command
 var checksumCmd = &cobra.Command{
 	Use:       "force-sum <bool>",
 	Short:     "Enable or disable mandatory checksum passing for all downloads",
@@ -65,8 +87,8 @@ var installDirCmd = &cobra.Command{
 	Example: "proto config install ~/.steam/root/compatibilitytools.d/",
 	Args:    cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Install location is now: ", backend.UsePath(args[0], "dir"))
-		viper.Set("app.install_directory", backend.UsePath(args[0], "dir"))
+		fmt.Println("Install location is now: ", backend.UsePath(args[0], true))
+		viper.Set("app.install_directory", backend.UsePath(args[0], true))
 		viper.WriteConfig()
 	},
 }
@@ -77,4 +99,6 @@ func init() {
 	configCmd.AddCommand(tempCmd)
 	configCmd.AddCommand(installDirCmd)
 	configCmd.AddCommand(checksumCmd)
+	configCmd.AddCommand(confDirCmd)
+	configCmd.AddCommand(verboseCmd)
 }

@@ -52,13 +52,25 @@ Run without arguments to install to the latest version or specify a tag to insta
 			tagData = data
 		}
 
+		// Prompt the user to confirm the install if no -y flag is set.
+		yesFlag := rootCmd.Flag("yes").Value.String()
+		if yesFlag != "true" {
+			s, m := backend.HumanReadableSize(backend.GetTotalAssetSize(tagData.Assets))
+			resp := backend.Prompt(fmt.Sprintf("Are you sure you want to install %s? [Est. %v%s] (y/N) ", tagData.GetTagName(), s, m), false)
+
+			if !resp {
+				fmt.Println("Installation cancelled, not installing.")
+				os.Exit(0)
+			}
+		}
+
 		/**
 		----------------------
 		|   Download Logic   |
 		----------------------
 		**/
 
-		installDir := backend.UsePath(viper.GetString("app.install_directory"), "dir")
+		installDir := backend.UsePath(viper.GetString("app.install_directory"), true)
 
 		// Check if folder exists
 		if _, err := os.Stat(installDir + tagData.GetName()); os.IsNotExist(err) {
@@ -87,7 +99,7 @@ Run without arguments to install to the latest version or specify a tag to insta
 		}
 
 		// Download the assets to the temp directory.
-		tmp := backend.UsePath(viper.GetString("app.temp_storage"), "file")
+		tmp := backend.UsePath(viper.GetString("app.temp_storage"), true)
 
 		// If it exists, download the checksum file.
 		if sum != nil {
@@ -152,4 +164,12 @@ Run without arguments to install to the latest version or specify a tag to insta
 
 func init() {
 	rootCmd.AddCommand(installCmd)
+
+	// Register the command flags.
+	installCmd.Flags().StringP("install-dir", "i", "", "Specify the install directory.")
+	installCmd.Flags().BoolP("force-sum", "f", true, "Force the checksum verification.")
+
+	// Bind the flags to the viper config.
+	viper.BindPFlag("app.install_directory", installCmd.Flags().Lookup("install-dir"))
+	viper.BindPFlag("app.force_sum", installCmd.Flags().Lookup("force-sum"))
 }

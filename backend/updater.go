@@ -8,8 +8,8 @@ import (
 	"github.com/creativeprojects/go-selfupdate"
 )
 
+// Causes the app to search for and install the latest version of Proto.
 func AppUpdate(version string) {
-
 	updater, _ := selfupdate.NewUpdater(selfupdate.Config{Validator: &selfupdate.ChecksumValidator{UniqueFilename: "checksums.txt"}})
 	latest, found, err := updater.DetectLatest("BitsOfAByte/proto")
 

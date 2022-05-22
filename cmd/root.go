@@ -15,8 +15,9 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "proto",
-	Short: "Install and manage Proton-GE installations ",
+	Use:     "proto",
+	Short:   "Install and manage Proton-GE installations ",
+	Version: backend.Version,
 }
 
 func Execute() {
@@ -28,6 +29,13 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
+
+	// Register persistent flags
+	rootCmd.PersistentFlags().BoolP("verbose", "v", false, "Enable verbose output")
+	rootCmd.PersistentFlags().BoolP("yes", "y", false, "Skip all confirmation prompts")
+
+	// Register flags to config
+	viper.BindPFlag("app.verbose", rootCmd.PersistentFlags().Lookup("verbose"))
 }
 
 // Iniotialized protos configuration file
@@ -39,10 +47,11 @@ func initConfig() {
 	viper.SetConfigType("json")
 
 	// Set the app default settings
-	viper.SetDefault("app.temp_storage", backend.UsePath("/tmp/proto/", "dir"))
-	viper.SetDefault("app.install_directory", backend.UsePath("~/.steam/root/compatibilitytools.d/", "dir"))
+	viper.SetDefault("app.temp_storage", backend.UsePath("/tmp/proto/", true))
+	viper.SetDefault("app.install_directory", backend.UsePath("~/.steam/root/compatibilitytools.d/", true))
 	viper.SetDefault("app.proton_source", "GloriousEggroll/proton-ge-custom")
 	viper.SetDefault("app.force_sum", "true")
+	viper.SetDefault("app.verbose", "false")
 
 	// Write a configuration file if it doesnt exist, or throw an error if something goes wrong
 	if err := viper.ReadInConfig(); err != nil {

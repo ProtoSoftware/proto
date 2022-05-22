@@ -9,6 +9,7 @@ import (
 	"BitsOfAByte/proto/backend"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -18,15 +19,27 @@ import (
 var uninstallCmd = &cobra.Command{
 	Use:     "uninstall <version>",
 	Short:   "Uninstall a version of Proton from your system.",
-	Example: "proto uninstall ProtonGE7-18",
+	Example: "proto uninstall GE-Proton7-18",
 	Args:    cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		installDir := backend.UsePath(viper.GetString("app.install_directory"), "dir") + args[0]
+		installDir := backend.UsePath(viper.GetString("app.install_directory"), true) + args[0]
 
 		// If the directory doesn't exist, we can't uninstall.
 		if _, err := os.Stat(installDir); os.IsNotExist(err) {
-			fmt.Println("The specified version of Proton was not found.")
+			fmt.Println("The specified version of Proton was not found at " + filepath.Dir(installDir))
 			os.Exit(1)
+		}
+
+		// Prompt the user to confirm unless -y flag is set.
+		yesFlag := rootCmd.Flag("yes").Value.String()
+		if yesFlag != "true" {
+			// Prompt the user to confirm the uninstall.
+			resp := backend.Prompt("Are you sure you want to uninstall Proton "+args[0]+"? (y/N) ", false)
+
+			if !resp {
+				fmt.Println("Uninstall cancelled.")
+				os.Exit(0)
+			}
 		}
 
 		err := os.RemoveAll(installDir)
@@ -36,7 +49,7 @@ var uninstallCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		fmt.Println("Uninstalled:" + args[0])
+		fmt.Printf("Successfully uninstalled %s from %s\n", args[0], filepath.Dir(installDir))
 	},
 }
 
