@@ -58,11 +58,21 @@ Run without arguments to install to the latest version or specify a tag to insta
 
 		// Check if folder exists
 		if folderInfo, err := os.Stat(installDir + tagData.GetTagName()); err == nil && folderInfo.IsDir() {
-			resp := backend.Prompt(fmt.Sprintf("Looks like %s is already installed, overwrite? [Est. %v%s] (y/N) ", tagData.GetTagName(), s, m), false)
 
-			if !resp {
-				os.Exit(0)
+			if yesFlag != "true" {
+				resp := backend.Prompt(fmt.Sprintf("Looks like %s is already installed, overwrite? [Est. %v%s] (y/N) ", tagData.GetTagName(), s, m), false)
+
+				if !resp {
+					os.Exit(0)
+				}
 			}
+
+			if err := os.RemoveAll(installDir + tagData.GetTagName()); err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+
+			fmt.Println("Removed old installation: " + tagData.GetTagName())
 		} else if yesFlag != "true" {
 			resp := backend.Prompt(fmt.Sprintf("Are you sure you want to install %s? [Est. %v%s] (y/N) ", tagData.GetTagName(), s, m), false)
 
@@ -130,6 +140,8 @@ Run without arguments to install to the latest version or specify a tag to insta
 		----------------------
 		**/
 
+		fmt.Println("Extracting files...")
+
 		tarReader, err := os.Open(tmp + tar.GetName())
 		if err != nil {
 			fmt.Println(err)
@@ -156,7 +168,7 @@ Run without arguments to install to the latest version or specify a tag to insta
 			fmt.Println("Failed to perform cleanup on temp directory, please remove manually.")
 		}
 
-		fmt.Printf("%s has been successfully installed to %s\n", tagData.GetTagName(), viper.GetString("app.install_directory"))
+		fmt.Printf("%s has been successfully installed.\n", tagData.GetTagName())
 	},
 }
 
