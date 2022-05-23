@@ -29,36 +29,33 @@ Run without arguments to install to the latest version or specify a tag to insta
 		----------------------
 		**/
 
+		// Find the version to install, if none is specified, use the latest.
 		var tagData *github.RepositoryRelease
-
 		switch len(args) {
 		case 0: // Install latest tag.
 			data, err := backend.GetReleases()
-
 			if err != nil {
 				fmt.Println(err)
 				os.Exit(1)
 			}
-
 			tagData = data[0]
 		default: // Install a specific tag.
 			data, err := backend.GetReleaseData(args[0])
-
 			if err != nil {
 				fmt.Println(err)
 				os.Exit(1)
 			}
-
 			tagData = data
 		}
 
+		// Get the installation directory. and flag values for confirmation.
 		installDir := backend.UsePath(viper.GetString("app.install_directory"), true)
 		yesFlag := rootCmd.Flag("yes").Value.String()
 		s, m := backend.HumanReadableSize(backend.GetTotalAssetSize(tagData.Assets))
 
-		// Check if folder exists
+		// Check if the directory exists already, meaning we're trying to install a version that's already installed.
 		if folderInfo, err := os.Stat(installDir + tagData.GetTagName()); err == nil && folderInfo.IsDir() {
-
+			// Prompt the user for to overwrite the existing version, skipped if -y flag is set.
 			if yesFlag != "true" {
 				resp := backend.Prompt(fmt.Sprintf("Looks like %s is already installed, overwrite? [Est. %v%s] (y/N) ", tagData.GetTagName(), s, m), false)
 
@@ -67,6 +64,7 @@ Run without arguments to install to the latest version or specify a tag to insta
 				}
 			}
 
+			// Remove the existing directory.
 			if err := os.RemoveAll(installDir + tagData.GetTagName()); err != nil {
 				fmt.Println(err)
 				os.Exit(1)
@@ -74,6 +72,7 @@ Run without arguments to install to the latest version or specify a tag to insta
 
 			fmt.Println("Removed old installation: " + tagData.GetTagName())
 		} else if yesFlag != "true" {
+			// Prompt the user to confirm the install, skipped if -y flag is set.
 			resp := backend.Prompt(fmt.Sprintf("Are you sure you want to install %s? [Est. %v%s] (y/N) ", tagData.GetTagName(), s, m), false)
 
 			if !resp {
@@ -90,7 +89,6 @@ Run without arguments to install to the latest version or specify a tag to insta
 
 		// Fetch valid assets from the release.
 		tar, sum, err := backend.GetValidAssets(tagData)
-
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -142,6 +140,7 @@ Run without arguments to install to the latest version or specify a tag to insta
 
 		fmt.Println("Extracting files...")
 
+		// Extract the tarball.
 		tarReader, err := os.Open(tmp + tar.GetName())
 		if err != nil {
 			fmt.Println(err)
@@ -162,8 +161,8 @@ Run without arguments to install to the latest version or specify a tag to insta
 		----------------------
 		**/
 
+		// Do any post-installation tasks, like cleanup and linking.
 		err = backend.ClearTemp()
-
 		if err != nil {
 			fmt.Println("Failed to perform cleanup on temp directory, please remove manually.")
 		}

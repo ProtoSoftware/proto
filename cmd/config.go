@@ -7,7 +7,9 @@ package cmd
 
 import (
 	"BitsOfAByte/proto/backend"
+	"encoding/json"
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -24,7 +26,20 @@ var confDirCmd = &cobra.Command{
 	Use:   "dir",
 	Short: "Get the location of the configuration file",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(viper.ConfigFileUsed())
+	},
+}
+
+var showConfCmd = &cobra.Command{
+	Use:   "show",
+	Short: "Show the current configuration",
+	Run: func(cmd *cobra.Command, args []string) {
+		formatOut, err := json.MarshalIndent(viper.AllSettings(), "", "  ")
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		fmt.Println(string(formatOut))
+		fmt.Println("Located at: " + viper.ConfigFileUsed())
 	},
 }
 
@@ -101,4 +116,5 @@ func init() {
 	configCmd.AddCommand(checksumCmd)
 	configCmd.AddCommand(confDirCmd)
 	configCmd.AddCommand(verboseCmd)
+	configCmd.AddCommand(showConfCmd)
 }

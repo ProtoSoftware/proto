@@ -15,6 +15,9 @@ var appUpdateCmd = &cobra.Command{
 	Use:   "app-update",
 	Short: "Update to the latest version of Proto",
 	Run: func(cmd *cobra.Command, args []string) {
+		// Call the updater from the backend.
+
+		// TODO: Add progress bar, confirmation.
 		backend.AppUpdate(backend.Version)
 	},
 }

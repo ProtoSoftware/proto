@@ -19,18 +19,20 @@ var releasesCmd = &cobra.Command{
 	Short:   "Show all available releases from the proton source.",
 	Example: `proto releases --limit 5`,
 	Run: func(cmd *cobra.Command, args []string) {
-		releases, err := backend.GetReleases()
 
+		// Get the releases from the backend.
+		releases, err := backend.GetReleases()
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
 
+		// Create a table to display the releases.
 		table := tablewriter.NewWriter(os.Stdout)
 		table.SetHeader([]string{"Tag", "Released On", "Install Command"})
-
 		limit, _ := cmd.Flags().GetInt("limit")
 
+		// Loop through the releases and add them to the table up to the limit.
 		for _, release := range releases {
 
 			if limit > 0 {
@@ -46,6 +48,7 @@ var releasesCmd = &cobra.Command{
 			})
 		}
 
+		// Display the table.
 		table.Render()
 	},
 }
