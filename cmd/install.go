@@ -76,7 +76,6 @@ Run without arguments to install to the latest version or specify a tag to insta
 			resp := backend.Prompt(fmt.Sprintf("Are you sure you want to install %s? [Est. %v%s] (y/N) ", tagData.GetTagName(), s, m), false)
 
 			if !resp {
-				fmt.Println("Installation cancelled, not installing.")
 				os.Exit(0)
 			}
 		}
@@ -97,24 +96,17 @@ Run without arguments to install to the latest version or specify a tag to insta
 		// Handle the lack of a checksum depending on the user's preference.
 		if sum == nil {
 			forced := viper.GetBool("app.force_sum")
+
 			if forced {
 				fmt.Println("No checksum file found, aborting install.")
 				os.Exit(1)
 			}
+
 			fmt.Println("No checksum file found, continuing without verification.")
 		}
 
 		// Download the assets to the temp directory.
 		tmp := backend.UsePath(viper.GetString("app.temp_storage"), true)
-
-		// If it exists, download the checksum file.
-		if sum != nil {
-			_, err = backend.DownloadFile(tmp+sum.GetName(), sum.GetBrowserDownloadURL())
-			if err != nil {
-				fmt.Println(err)
-				os.Exit(1)
-			}
-		}
 
 		// Download the tarball.
 		_, err = backend.DownloadFile(tmp+tar.GetName(), tar.GetBrowserDownloadURL())
@@ -129,8 +121,45 @@ Run without arguments to install to the latest version or specify a tag to insta
 		----------------------
 		**/
 
-		// TODO: Verify checksums here.
-		fmt.Println("Checksum verification not implemented, skipping regardless of setting.")
+		// If it exists, download the checksum file and verify it against the downloaded tarball.
+		if sum != nil {
+			_, err = backend.DownloadFile(tmp+sum.GetName(), sum.GetBrowserDownloadURL())
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+
+			match, err := backend.MatchChecksum(tmp+tar.GetName(), tmp+sum.GetName())
+			forceSum := viper.GetBool("app.force_sum")
+
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+
+			// If the checksums don't match and force sum is enabled, abort.
+			if !match && viper.GetBool("app.force_sum") {
+				fmt.Println("Checksums do not match, aborting install.")
+				os.Exit(1)
+			}
+
+			// If the checksums don't match and force sum is disabled, prompt the user to continue unless -y flag is set.
+			if !match && !forceSum && yesFlag != "true" {
+				resp := backend.Prompt(fmt.Sprintf("Checksums do not match, continue? [Est. %v%s] (y/N) ", s, m), false)
+
+				if !resp {
+					os.Exit(0)
+				}
+			} else if !match && !forceSum && yesFlag == "true" {
+				// -y flag is set, warn the user that the checksums don't match.
+				fmt.Println("Warning! Checksums do not match, continuing without verification due to -y flag.")
+			}
+
+			// Everything checks out, continue with the install.
+			if match {
+				fmt.Println("Checksums verified successfully.")
+			}
+		}
 
 		/**
 		----------------------
@@ -176,7 +205,7 @@ func init() {
 
 	// Register the command flags.
 	installCmd.Flags().StringP("install-dir", "i", "", "Specify the install directory.")
-	installCmd.Flags().BoolP("force-sum", "f", true, "Force the checksum verification.")
+	installCmd.Flags().BoolP("force-sum", "f", true, "Force checksum verification")
 
 	// Bind the flags to the viper config.
 	viper.BindPFlag("app.install_directory", installCmd.Flags().Lookup("install-dir"))

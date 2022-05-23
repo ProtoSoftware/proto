@@ -3,7 +3,10 @@ package backend
 import (
 	"archive/tar"
 	"compress/gzip"
+	"crypto"
+	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -47,7 +50,7 @@ func ClearTemp() error {
 
 // Downloads the file from the given URL, following redirects if needed. The final file will be put at the given path
 // and a progress bar will be output to the standard output while downloading.
-func DownloadFile(path string, url string) (os.FileInfo, error) {
+func DownloadFile(path, url string) (os.FileInfo, error) {
 
 	// If path doesnt exist create it
 	if _, err := os.Stat(path); os.IsNotExist(err) {
@@ -168,6 +171,37 @@ func ExtractTar(path string, r io.Reader) error {
 			f.Close()
 		}
 	}
+}
+
+// Check a given files sum against the given sum
+func MatchChecksum(filePath, sumPath string) (bool, error) {
+	// Get the sum of the file with crypto inbuilt
+	h := crypto.SHA512.New()
+	f, err := os.Open(filePath)
+	if err != nil {
+		return false, err
+	}
+
+	defer f.Close()
+
+	if _, err := io.Copy(h, f); err != nil {
+		return false, err
+	}
+
+	// Get the sum of the file in the sum file
+	sum, err := ioutil.ReadFile(sumPath)
+	if err != nil {
+		return false, err
+	}
+
+	// Check all lines for the files sum
+	for _, line := range strings.Split(string(sum), "\n") {
+		if strings.HasPrefix(line, fmt.Sprintf("%x", h.Sum(nil))) {
+			return true, nil
+		}
+	}
+
+	return false, nil
 }
 
 // Gets the size of the given directory in bytes.

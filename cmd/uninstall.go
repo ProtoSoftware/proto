@@ -37,7 +37,6 @@ var uninstallCmd = &cobra.Command{
 			resp := backend.Prompt("Are you sure you want to uninstall Proton "+args[0]+"? (y/N) ", false)
 
 			if !resp {
-				fmt.Println("Uninstall cancelled.")
 				os.Exit(0)
 			}
 		}
