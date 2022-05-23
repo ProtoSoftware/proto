@@ -193,7 +193,7 @@ Run without arguments to install to the latest version or specify a tag to insta
 		----------------------
 		**/
 
-		fmt.Printf("%s has been successfully installed!\nDir: %s", tagData.GetTagName(), installDir)
+		fmt.Printf("%s has been successfully installed!\nLocation: %s\n", tagData.GetTagName(), installDir)
 	},
 }
 
