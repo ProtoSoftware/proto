@@ -17,14 +17,15 @@ import (
 
 // uninstallCmd represents the uninstall command
 var uninstallCmd = &cobra.Command{
-	Use:     "uninstall <version>",
-	Short:   "Uninstall a version of Proton from your system.",
-	Example: "proto uninstall GE-Proton7-18",
-	Args:    cobra.ExactArgs(1),
+	Use:        "uninstall <version>",
+	Short:      "Uninstall a version of Proton from your system.",
+	Aliases:    []string{"rm", "remove"},
+	SuggestFor: []string{"delete"},
+	Example:    "proto uninstall GE-Proton7-18",
+	Args:       cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		installDir := backend.UsePath(viper.GetString("app.install_directory"), true) + args[0]
 
-		// If the directory doesn't exist, we can't uninstall.
 		if _, err := os.Stat(installDir); os.IsNotExist(err) {
 			fmt.Println("The specified version of Proton was not found at " + filepath.Dir(installDir))
 			os.Exit(1)

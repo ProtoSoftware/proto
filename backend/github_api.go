@@ -24,6 +24,8 @@ func GetReleases() ([]*github.RepositoryRelease, error) {
 
 	releases, _, err := client.Repositories.ListReleases(context.Background(), owner, repo, nil)
 
+	Debug("GetReleases: Found " + fmt.Sprintf("%d", len(releases)) + " releases")
+
 	if err != nil {
 		return nil, err
 	}
@@ -38,9 +40,13 @@ func GetReleaseData(tag string) (*github.RepositoryRelease, error) {
 
 	release, _, err := client.Repositories.GetReleaseByTag(context.Background(), owner, repo, tag)
 
+	Debug("GetReleaseData: Looking for: " + owner + "/" + repo + "/" + tag)
+
 	if err != nil {
 		return nil, err
 	}
+
+	Debug("GetReleaseData: Found release " + release.GetTagName())
 
 	return release, nil
 }
@@ -50,7 +56,9 @@ func GetTotalAssetSize(assets []*github.ReleaseAsset) int64 {
 	var size int
 
 	for _, asset := range assets {
-		size += asset.GetSize()
+		if strings.HasSuffix(asset.GetName(), ".tar.gz") {
+			size += asset.GetSize()
+		}
 	}
 
 	return int64(size)
@@ -63,15 +71,20 @@ func GetValidAssets(release *github.RepositoryRelease) (*github.ReleaseAsset, *g
 
 	for _, asset := range release.Assets {
 
+		Debug("GetValidAssets: Validating asset: " + asset.GetName())
+
 		// Once we have both assets, we don't need to keep looking.
 		if protonTar != nil && protonSum != nil {
+			Debug("GetValidAssets: Found both assets, finishing search.")
 			break
 		}
 
 		// Find the needed files for an installation
 		if strings.HasSuffix(asset.GetName(), ".tar.gz") {
+			Debug("GetValidAssets: Found a valid tar.gz asset.")
 			protonTar = asset
 		} else if strings.HasSuffix(asset.GetName(), ".sha512sum") {
+			Debug("GetValidAssets: Found a valid sha512sum asset.")
 			protonSum = asset
 		}
 	}

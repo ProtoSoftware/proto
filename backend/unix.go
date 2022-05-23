@@ -18,6 +18,8 @@ func PreventRoot() {
 func Prompt(message string, defaultValue bool) bool {
 	var response string
 
+	Debug("Prompt: Asking for user input")
+
 	fmt.Print(message)
 	fmt.Scanln(&response)
 

@@ -21,6 +21,9 @@ var installCmd = &cobra.Command{
 	Short: "Download and install Proton to your system.",
 	Long: `Download and install Proton to your system.
 Run without arguments to install to the latest version or specify a tag to install.`,
+	PostRun: func(cmd *cobra.Command, args []string) {
+		backend.ClearTemp()
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 
 		/**
@@ -190,13 +193,7 @@ Run without arguments to install to the latest version or specify a tag to insta
 		----------------------
 		**/
 
-		// Do any post-installation tasks, like cleanup and linking.
-		err = backend.ClearTemp()
-		if err != nil {
-			fmt.Println("Failed to perform cleanup on temp directory, please remove manually.")
-		}
-
-		fmt.Printf("%s has been successfully installed.\n", tagData.GetTagName())
+		fmt.Printf("%s has been successfully installed!\nDir: %s", tagData.GetTagName(), installDir)
 	},
 }
 

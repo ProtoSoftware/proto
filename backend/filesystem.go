@@ -19,6 +19,8 @@ import (
 // Correctly formats a path for the program.
 func UsePath(path string, trailSlash bool) string {
 
+	Debug("UsePath: Attempting to format path: " + path)
+
 	// If trail slash is true, add a trailing slash to the path
 	if path[len(path)-1:] != "/" && trailSlash {
 		path = path + "/"
@@ -35,15 +37,18 @@ func UsePath(path string, trailSlash bool) string {
 		path = filepath.Join(homeDir, path[2:])
 	}
 
+	Debug("UsePath: Finished formatting path, result was: " + path)
+
 	return path
 }
 
 func ClearTemp() error {
-	err := os.RemoveAll(viper.GetString("app.temp_storage"))
-
+	err := os.RemoveAll(UsePath(viper.GetString("app.temp_storage"), false))
 	if err != nil {
 		return err
 	}
+
+	Debug("ClearTemp: Cleaned up temp directory")
 
 	return nil
 }
@@ -58,6 +63,8 @@ func DownloadFile(path, url string) (os.FileInfo, error) {
 		if err != nil {
 			return nil, err
 		}
+
+		Debug("DownloadFile: Created directory: " + filepath.Dir(path))
 	}
 
 	// Create the file
@@ -74,6 +81,8 @@ func DownloadFile(path, url string) (os.FileInfo, error) {
 		return nil, err
 	}
 
+	Debug("DownloadFile: Downloading file from: " + url)
+
 	// Set up a progress bar
 	tmpl := `{{ cycle . "⠃" "⠆" "⠤" "⠰" "⠘" "⠉" }} Installing {{string . "src"}} [{{percent .}} | {{speed . "%s/s"}} | {{ rtime .}}]`
 	bar := pb.ProgressBarTemplate(tmpl).Start64(resp.ContentLength).Set("src", strings.Split(url, "/")[len(strings.Split(url, "/"))-1])
@@ -87,12 +96,12 @@ func DownloadFile(path, url string) (os.FileInfo, error) {
 		return nil, err
 	}
 
-	// Close the file
-	out.Close()
 	// Check if the file is valid
 	if _, err := os.Stat(path); err != nil {
 		return nil, err
 	}
+
+	Debug("DownloadFile: Downloaded file to: " + path)
 
 	bar.Finish()
 
@@ -109,14 +118,8 @@ func ExtractTar(path string, r io.Reader) error {
 		if err != nil {
 			return err
 		}
-	}
 
-	// If path doesnt exist, create it
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		err := os.MkdirAll(path, 0755)
-		if err != nil {
-			return err
-		}
+		Debug("ExtractTar: Created directory: " + filepath.Dir(path))
 	}
 
 	gzr, err := gzip.NewReader(r)
@@ -126,6 +129,8 @@ func ExtractTar(path string, r io.Reader) error {
 
 	defer gzr.Close()
 	tr := tar.NewReader(gzr)
+
+	Debug("ExtractTar: Extracting tarball to: " + path)
 
 	for {
 		header, err := tr.Next()
@@ -141,6 +146,8 @@ func ExtractTar(path string, r io.Reader) error {
 		case header == nil:
 			continue
 		}
+
+		Debug("ExtractTar: Inflating: " + header.Name)
 
 		// Send all files to the path given
 		target := filepath.Join(path, header.Name)
@@ -196,6 +203,7 @@ func MatchChecksum(filePath, sumPath string) (bool, error) {
 
 	// Check all lines for the files sum
 	for _, line := range strings.Split(string(sum), "\n") {
+		Debug("MatchChecksum: Attempting to match checksum: " + strings.TrimSuffix(line, "\n") + " to: " + string(h.Sum(nil)))
 		if strings.HasPrefix(line, fmt.Sprintf("%x", h.Sum(nil))) {
 			return true, nil
 		}
