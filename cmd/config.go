@@ -21,14 +21,6 @@ var configCmd = &cobra.Command{
 	Short: "Change the configuration of Proto",
 }
 
-// confDirCmd represents the conf-dir command
-var confDirCmd = &cobra.Command{
-	Use:   "dir",
-	Short: "Get the location of the configuration file",
-	Run: func(cmd *cobra.Command, args []string) {
-	},
-}
-
 var showConfCmd = &cobra.Command{
 	Use:   "show",
 	Short: "Show the current configuration",
@@ -114,7 +106,6 @@ func init() {
 	configCmd.AddCommand(tempCmd)
 	configCmd.AddCommand(installDirCmd)
 	configCmd.AddCommand(checksumCmd)
-	configCmd.AddCommand(confDirCmd)
 	configCmd.AddCommand(verboseCmd)
 	configCmd.AddCommand(showConfCmd)
 }
