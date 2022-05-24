@@ -1,4 +1,4 @@
-<div align="center">
+<div align="left">
 
 <img src="./.assets/Banner.png" alt="Proto Logo">
   
