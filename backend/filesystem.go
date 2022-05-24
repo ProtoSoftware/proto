@@ -19,7 +19,7 @@ import (
 // Correctly formats a path for the program.
 func UsePath(path string, trailSlash bool) string {
 
-	Debug("UsePath: Attempting to format path: " + path)
+	Debug("UsePath: Attempting to format path:TEST " + path)
 
 	// If trail slash is true, add a trailing slash to the path
 	if path[len(path)-1:] != "/" && trailSlash {
