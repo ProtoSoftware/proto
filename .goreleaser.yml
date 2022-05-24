@@ -53,6 +53,32 @@ brews:
     homepage: "https://github.com/BitsOfAByte/proto"
     license: "GPL-3.0-only"
 
+nfpms:
+  - vendor: BitsOfAByte
+    homepage: https://github.com/BitsOfAByte/proto
+    maintainer: BitsOfAByte
+    description: Install and manage Proton versions easily
+    license: GPL-3.0-only
+
+    formats:
+      - deb
+      - rpm
+
+    file_name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+
+    contents:
+      - dst: ~/.config/config.json
+        type: ghost
+
+    rpm:
+      signature:
+        key_file: "{{ .Env.GPG_KEY_PATH }}"
+
+    deb:
+      signature:
+        key_file: "{{ .Env.GPG_KEY_PATH }}"
+        type: origin
+
 release:
   github:
     owner: BitsOfAByte
