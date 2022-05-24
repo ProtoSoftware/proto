@@ -99,7 +99,7 @@ jobs:
           list-files: "json"
           filters: |
             src:
-              - '*.go'
+              - '**/*.go'
               - 'go.mod'
               - 'go.sum'
               - '.goreleaser.yml'
