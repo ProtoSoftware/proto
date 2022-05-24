@@ -14,6 +14,7 @@ on:
 jobs:
   # Check to see if an invalid file has been modified, if it has then fail.
   No-Invalid-Edits:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
