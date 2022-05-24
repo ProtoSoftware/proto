@@ -30,7 +30,9 @@ jobs:
         uses: thollander/actions-comment-pull-request@v1
         with:
           message: | 
-            Thank you for your pull request! If you have modified any source code, a preview build will be generated as long as all other tests pass. Please use this time to double check your changes for any typos, warnings or other problems that will need to be resolved. Ref: ${{ github.ref_name }} (ID): ${{ github.run_id }}) 
+            Thank you for your pull request! If you have modified any source code, a preview build will be generated as long as all other tests pass. Please use this time to double check your changes for any typos, warnings or other problems that will need to be resolved. 
+            
+            Ref: ${{ github.ref_name }} (${{ github.run_id }})
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   # Check to see if an invalid file has been modified, if it has then fail.
@@ -130,6 +132,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Assets
+        if: steps.changes.outputs.src == 'true'
         uses: actions/upload-artifact@v3
         with:
           path: |
