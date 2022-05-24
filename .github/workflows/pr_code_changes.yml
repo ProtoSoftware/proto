@@ -1,40 +1,17 @@
-name: PR
+# This workflow outlines tasks that are ran when a pull request that modifies source code is made, such as building a preview
+
+name: PR-Code
 
 on:
   pull_request:
     branches: [main]
+    paths:
+      - "**.go"
+      - "go.mod"
+      - "go.sum"
+      - ".goreleaser.yml"
 
 jobs:
-  # Label the pull request with its file changes
-  Label:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Label PR
-        uses: actions/labeler@v4
-        with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          sync-labels: true
-
-  # Post a deploy preview comment when the pull request is opened
-  Opened:
-    if: ${{ github.event.action == 'opened'}}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Greet First Time Contributor
-        uses: actions/first-interaction@v1
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          pr-message: "Thank you for your contribution! As you are a first time contributor, please ensure you have read the CONTRIBUTING guide to help make your PR the best it can be!"
-
-      - name: Comment
-        uses: thollander/actions-comment-pull-request@v1
-        with:
-          message: | 
-            Thank you for your pull request! If you have modified any source code, a preview build will be generated as long as all other tests pass. Please use this time to double check your changes for any typos, warnings or other problems that will need to be resolved. 
-            
-            Ref: ${{ github.ref_name }} (${{ github.run_id }})
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   # Check to see if an invalid file has been modified, if it has then fail.
   No-Invalid-Edits:
     runs-on: ubuntu-latest
@@ -55,7 +32,7 @@ jobs:
         if: steps.changes.outputs.src == 'true'
         uses: thollander/actions-comment-pull-request@v1
         with:
-          message: "A preview build was not generated as a security measure due to this pull request modifying files that cannot be modified via a pull request. Please review the contributing guide and revert these files for a build to be generated."
+          message: "A preview build was not generated as a security measure as invalid files have been modified, please refer to the contributing guide for information.""
           comment_includes: "preview build"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -75,7 +52,7 @@ jobs:
 
       - name: Dependency Review
         uses: actions/dependency-review-action@v1
-        
+
       - name: Post Comment on Insecure Changes
         if: ${{ failure() }}
         uses: thollander/actions-comment-pull-request@v1
@@ -91,27 +68,13 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-        
-      - name: Calculate If Build Is Needed
-        uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          list-files: "json"
-          filters: |
-            src:
-              - '**/*.go'
-              - 'go.mod'
-              - 'go.sum'
-              - '.goreleaser.yml'
-              
+
       - name: Set up Go
-        if: steps.changes.outputs.src == 'true'
         uses: actions/setup-go@v2
         with:
-          go-version: 1.18.1
+          go-version: 1.18.2
 
       - name: Restore Build Cache
-        if: steps.changes.outputs.src == 'true'
         uses: actions/cache@v3
         with:
           path: |
@@ -124,7 +87,6 @@ jobs:
             ${{ runner.os }}-go-${{ matrix.go-version }}-
 
       - name: Run GoReleaser
-        if: steps.changes.outputs.src == 'true'
         uses: goreleaser/goreleaser-action@v2
         with:
           distribution: goreleaser
@@ -134,7 +96,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Assets
-        if: steps.changes.outputs.src == 'true'
         uses: actions/upload-artifact@v3
         with:
           path: |
@@ -142,14 +103,13 @@ jobs:
             checksums.txt
 
       - name: Edit Comment (Success)
-        if: steps.changes.outputs.src == 'true'
         uses: thollander/actions-comment-pull-request@v1
         with:
           message: |
             ### ✅ Success
-            
+
             **Always review the source code before executing it on your system, no matter where it comes from** 
-            
+
             | Name                 |  Link                                                                          |
             |----------------------|--------------------------------------------------------------------------------|
             | Preview Build Commit | ${{ github.sha }}                                                              |
