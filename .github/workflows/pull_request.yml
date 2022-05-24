@@ -29,7 +29,8 @@ jobs:
       - name: Comment
         uses: thollander/actions-comment-pull-request@v1
         with:
-          message: "A preview build for **${{ github.ref_name }}** is being generated, please wait. (ID: ${{ github.run_id }})"
+          message: | 
+            Thank you for your pull request! If you have modified any source code, a preview build will be generated as long as all other tests pass. Please use this time to double check your changes for any typos, warnings or other problems that will need to be resolved. Ref: ${{ github.ref_name }} (ID): ${{ github.run_id }}) 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   # Check to see if an invalid file has been modified, if it has then fail.
@@ -52,7 +53,7 @@ jobs:
         if: steps.changes.outputs.src == 'true'
         uses: thollander/actions-comment-pull-request@v1
         with:
-          message: "Not generating a preview build as this pull request contains invalid file changes."
+          message: "A preview build was not generated as a security measure due to this pull request modifying files that cannot be modified via a pull request. Please review the contributing guide and revert these files for a build to be generated."
           comment_includes: "preview build"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -72,29 +73,41 @@ jobs:
 
       - name: Dependency Review
         uses: actions/dependency-review-action@v1
-
-      - name: Post Comment on Vulnerable Package
+        
+      - name: Post Comment on Invalid Changes
         if: ${{ failure() }}
         uses: thollander/actions-comment-pull-request@v1
         with:
-          message: "Not generating a preview build as this pull request contains insecure dependencies."
+          message: "A preview build was not generated as a security measure due to this pull request containing insecure dependencies."
           comment_includes: "preview build"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  # If all is good, create a preview build for the pull request
+  # If all is good, create a preview build for the pull request if needed.
   Preview:
     runs-on: ubuntu-latest
     needs: ["Dependency-Review", "No-Invalid-Edits"]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-
+        
+      - name: Calculate If Build Is Needed
+        uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          list-files: "json"
+          filters: |
+            src:
+              - 'cmd/**'
+              - 'backend/**'
+              
       - name: Set up Go
+        if: steps.changes.outputs.src == 'true'
         uses: actions/setup-go@v2
         with:
           go-version: 1.18.1
 
       - name: Restore Build Cache
+        if: steps.changes.outputs.src == 'true'
         uses: actions/cache@v3
         with:
           path: |
@@ -107,6 +120,7 @@ jobs:
             ${{ runner.os }}-go-${{ matrix.go-version }}-
 
       - name: Run GoReleaser
+        if: steps.changes.outputs.src == 'true'
         uses: goreleaser/goreleaser-action@v2
         with:
           distribution: goreleaser
@@ -123,12 +137,19 @@ jobs:
             checksums.txt
 
       - name: Edit Comment (Success)
+        if: steps.changes.outputs.src == 'true'
         uses: thollander/actions-comment-pull-request@v1
         with:
           message: |
-            Success! A preview build was generated and can be downloaded from [here](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id}}).
+            ### Success! 
+            A preview build was successfully generated for your this pull request and can be found below.
+            
+            **Always review the source code before executing it on your system, no matter where it comes from** 
+            
+            | ID                   | Download URL                                                                   |
+            |----------------------|--------------------------------------------------------------------------------|
+            | ${{ github.run_id }} |  https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }} |
 
-            Please review the source code & file modifications before running the preview, as it could contain insecure code.
           comment_includes: "preview build"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
