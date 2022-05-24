@@ -4,5 +4,5 @@ package backend
 var (
 	Version = "v0.0.0"
 	Commit  = "none"
-	Date    = "none"
+	Date    = "123"
 )
