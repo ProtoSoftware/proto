@@ -76,7 +76,7 @@ jobs:
       - name: Dependency Review
         uses: actions/dependency-review-action@v1
         
-      - name: Post Comment on Invalid Changes
+      - name: Post Comment on Insecure Changes
         if: ${{ failure() }}
         uses: thollander/actions-comment-pull-request@v1
         with:
@@ -99,8 +99,10 @@ jobs:
           list-files: "json"
           filters: |
             src:
-              - 'cmd/**'
-              - 'backend/**'
+              - '*.go'
+              - 'go.mod'
+              - 'go.sum'
+              - '.goreleaser.yml'
               
       - name: Set up Go
         if: steps.changes.outputs.src == 'true'
@@ -144,15 +146,14 @@ jobs:
         uses: thollander/actions-comment-pull-request@v1
         with:
           message: |
-            ### Success! 
-            A preview build was successfully generated for your this pull request and can be found below.
+            ### ✅ Success
             
             **Always review the source code before executing it on your system, no matter where it comes from** 
             
-            | ID                   | Download URL                                                                   |
+            | Name                 |  Link                                                                          |
             |----------------------|--------------------------------------------------------------------------------|
-            | ${{ github.run_id }} |  https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }} |
-
+            | Preview Build Commit | ${{ github.sha }}                                                              |
+            | Preview Build URL    |  https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }} |
           comment_includes: "preview build"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
