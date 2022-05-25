@@ -49,18 +49,21 @@ brews:
       email: actions@github.com
 
     commit_msg_template: "build: Brew formula update for version {{ .Tag }}"
-    description: "Install and manage custom Proton installations with ease"
+    description: |
+      Proto compatability tool manager
+      Install and manage custom Proton installations with ease using Proto. Simply run "proto install" and enjoy the magic.
     homepage: "https://github.com/BitsOfAByte/proto"
     license: "GPL-3.0-only"
 
 nfpms:
   - vendor: BitsOfAByte
+    id: nfpm
     homepage: https://github.com/BitsOfAByte/proto
     maintainer: BitsOfAByte
-    description: Install and manage custom Proton installations with ease
+    description: |
+      Proto compatability tool manager
+      Install and manage custom Proton installations with ease using Proto. Simply run "proto install" and enjoy the magic.
     license: "GPL-3.0"
-    id: nfpm
-
     formats:
       - deb
       - rpm
@@ -68,6 +71,13 @@ nfpms:
     file_name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
 
     contents:
+      # Register the configuration directory
+      - dst: ~/.config/proto
+        type: dir
+        file_info:
+          mode: 0755
+
+        # Register config.json as a ghost file
       - dst: ~/.config/proto/config.json
         type: ghost
 
