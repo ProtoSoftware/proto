@@ -67,7 +67,7 @@ nfpms:
     file_name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
 
     contents:
-      - dst: ~/.config/config.json
+      - dst: ~/.config/proto/config.json
         type: ghost
 
 release:
