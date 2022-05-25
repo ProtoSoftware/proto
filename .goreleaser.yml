@@ -59,6 +59,7 @@ nfpms:
     maintainer: BitsOfAByte
     description: Install and manage custom Proton installations with ease
     license: "GPL-3.0"
+    id: nfpm
 
     formats:
       - deb
@@ -69,6 +70,14 @@ nfpms:
     contents:
       - dst: ~/.config/proto/config.json
         type: ghost
+
+publishers:
+  - name: "packages.bitsofabyte.dev"
+    dir: "{{ dir .ArtifactPath }}"
+    ids:
+      - nfpm
+    cmd: |
+      curl -F package=@{{ .ArtifactPath }} https://{{ .Env.FURY_TOKEN }}@push.fury.io/BitsOfAByte/
 
 release:
   github:
