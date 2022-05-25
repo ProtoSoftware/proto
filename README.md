@@ -104,7 +104,7 @@ brew install proto
 ---
 
 ### Manual Installation
-
+Manually install a Binary from the release Archives.
 <details>  
 <summary>Show Steps</summary>
   
@@ -118,7 +118,7 @@ If you aren't sure on what architecture you need to download, you should try `am
 ---
 
 ### From Source
-
+Build Proto directly from the GitHub source for any supported platform.
 <details>  
 <summary>Show Steps</summary>
   
