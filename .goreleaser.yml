@@ -77,7 +77,7 @@ publishers:
     ids:
       - nfpm
     cmd: |
-      curl -F package=@{{ .ArtifactPath }} https://{{ .Env.FURY_TOKEN }}@push.fury.io/BitsOfAByte/
+      curl -F package=@{{ .ArtifactName }} https://{{ .Env.FURY_TOKEN }}@push.fury.io/BitsOfAByte/
 
 release:
   github:
