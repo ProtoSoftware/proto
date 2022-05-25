@@ -1,8 +1,7 @@
 
 # Builds
 dist/
-proto
-*.exe
+.build_data/
 
 # Secrets
 *.pem

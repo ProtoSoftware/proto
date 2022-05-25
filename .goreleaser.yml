@@ -3,6 +3,7 @@ before:
   hooks:
     - go mod tidy
     - go generate ./...
+    - go run ./build/generate.go {{.Version}}
 builds:
   - env:
       - CGO_ENABLED=0
@@ -51,9 +52,10 @@ brews:
     commit_msg_template: "build: Brew formula update for version {{ .Tag }}"
     description: |
       Proto compatability tool manager
-      Install and manage custom Proton installations with ease using Proto. Simply run "proto install" and enjoy the magic.
     homepage: "https://github.com/BitsOfAByte/proto"
     license: "GPL-3.0-only"
+    install: |
+      bin.install "proto"
 
 nfpms:
   - vendor: BitsOfAByte
@@ -62,9 +64,8 @@ nfpms:
     maintainer: BitsOfAByte
     description: |
       Proto compatability tool manager
-      Install and manage custom Proton installations with ease using Proto. Simply run "proto install" and enjoy the magic.
     license: "GPL-3.0"
-    priority: optional
+    priority: extra
     section: Utilities
     formats:
       - deb
@@ -73,15 +74,19 @@ nfpms:
     file_name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
 
     contents:
-      # Register the configuration directory
       - dst: ~/.config/proto
         type: dir
         file_info:
-          mode: 0755
-
-        # Register config.json as a ghost file
+          mode: 0775
       - dst: ~/.config/proto/config.json
         type: ghost
+
+      - src: ./.build_data/proto.desktop
+        dst: /usr/share/applications/proto.desktop
+      - src: ./.build_data/proto.metainfo.xml
+        dst: /usr/share/metainfo/proto.metainfo.xml
+      - src: ./.build_data/icon.png
+        dst: /usr/share/icons/proto/icon.png
 
 publishers:
   - name: "packages.bitsofabyte.dev"
