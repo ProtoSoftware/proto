@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./.assets/Banner.png" alt="Proto Logo">
+<img src="./.assets/Banners/banner.png" alt="Proto Logo">
   
 Install and manage custom Proton installations with ease on supported systems.
 
