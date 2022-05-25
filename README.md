@@ -45,9 +45,9 @@ sudo apt update
 sudo apt install proto
 ```
   
-<summary>Click Here to Show Install Guide</summary>
 </details>  
 
+---
 
 ### Yum Package Manager
 If you are using Fedora, OpenSUSE, or any other system that supports the yum package manager then use this installation method.
@@ -77,6 +77,8 @@ sudo yum install proto
 
 </details>  
 
+---
+
 ### Homebrew Package Manager
 If your distributions package manager is not listed here or you wish to use [Homebrew](https://brew.sh).
 
@@ -99,6 +101,8 @@ brew install proto
   
 </details>
 
+---
+
 ### Manual Installation
 
 <details>  
@@ -110,6 +114,8 @@ brew install proto
 If you aren't sure on what architecture you need to download, you should try `amd64` first as it is the most common for everyday hardware.
 
 </details>
+
+---
 
 ### From Source
 
