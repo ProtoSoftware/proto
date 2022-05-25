@@ -12,15 +12,7 @@ class Proto < Formula
   on_linux do
     if Hardware::CPU.arm? && !Hardware::CPU.is_64_bit?
       url "https://github.com/BitsOfAByte/proto/releases/download/v0.6.4/proto_linux_arm.zip"
-      sha256 "76f462289a712aca35c3294391c048fbe006d82b099d74c08da3dc7b65f25af7"
-
-      def install
-        bin.install "proto"
-      end
-    end
-    if Hardware::CPU.intel?
-      url "https://github.com/BitsOfAByte/proto/releases/download/v0.6.4/proto_linux_amd64.zip"
-      sha256 "089949b1754f5ab9293281a7526144c7b9a6b7f8486145771be8dde44778f9bd"
+      sha256 "ad3d60219cee0ad04cfce2f3fd66a417e4aed3adcb1c0df7a927088a61bb1209"
 
       def install
         bin.install "proto"
@@ -28,7 +20,15 @@ class Proto < Formula
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
       url "https://github.com/BitsOfAByte/proto/releases/download/v0.6.4/proto_linux_arm64.zip"
-      sha256 "d8b58220f6a4ee61fd0e957376c8df8cc1b35b121ec8ec4e76dde35999bde9c8"
+      sha256 "bbb26339c377b38e8b951db1707a19a19de341b90f687ef0af0c6d6aa1884e69"
+
+      def install
+        bin.install "proto"
+      end
+    end
+    if Hardware::CPU.intel?
+      url "https://github.com/BitsOfAByte/proto/releases/download/v0.6.4/proto_linux_amd64.zip"
+      sha256 "d1132bd4678e67fb4fb4521d654d0596863ea419e3d7ee80c80982f8678cf1f6"
 
       def install
         bin.install "proto"
