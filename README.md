@@ -21,7 +21,6 @@ Proto currently boasts the following features:
 
 - Download Checksums (See STANDARDS)
 - Multiple proton installations
-- Built in app updater
 - Shell completion generation
 
 ## Quick Start
