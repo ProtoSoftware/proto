@@ -8,5 +8,8 @@ changes | ci:
 changes | cmd:
   - "cmd/**/*"
 
+changes | tests: 
+  - "**/*_test.go"
+  
 changes | backend:
   - "backend/**/*"
