@@ -49,8 +49,8 @@ sudo apt install proto
 
 ---
 
-### Yum Package Manager
-If you are using Fedora, OpenSUSE, or any other system that supports the yum package manager then use this installation method.
+### Yum/DNF Package Manager
+If you are using Fedora, OpenSUSE, or any other system that supports the yum/dnf package manager then use this installation method.
 
 <details>
 <summary>Show Steps</summary>
