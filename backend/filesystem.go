@@ -1,3 +1,7 @@
+/*
+Copyright © 2022 BitsOfAByte
+
+*/
 package backend
 
 import (

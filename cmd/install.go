@@ -2,7 +2,6 @@
 Copyright © 2022 BitsOfAByte
 
 */
-
 package cmd
 
 import (

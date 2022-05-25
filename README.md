@@ -19,13 +19,7 @@ Proto was designed as a beginner friendly and convinent tool for downloading and
 ## How to Use
 Install Proto to your system using one of the methods listed below, then simply run `proto -h` for an up to date list of commands. 
 
-<<<<<<< HEAD
-- Download Checksums (See STANDARDS)
-- Multiple proton installations
-- Shell completion generation
-=======
 To see all configuration options for Proto run `proto config -h`
->>>>>>> 7f322a7 (docs: add new install methods)
 
 ## Installation Methods
 ### APT Package Manager
