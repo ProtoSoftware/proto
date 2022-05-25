@@ -64,6 +64,8 @@ nfpms:
       Proto compatability tool manager
       Install and manage custom Proton installations with ease using Proto. Simply run "proto install" and enjoy the magic.
     license: "GPL-3.0"
+    priority: optional
+    section: Utilities
     formats:
       - deb
       - rpm
