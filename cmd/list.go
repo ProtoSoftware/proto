@@ -17,8 +17,9 @@ import (
 
 // listCmd represents the list command
 var listCmd = &cobra.Command{
-	Use:   "list",
-	Short: "Shows a list of installed versions of Proton.",
+	Use:     "list",
+	Short:   "Shows a list of installed versions of Proton.",
+	Aliases: []string{"ls"},
 	Run: func(cmd *cobra.Command, args []string) {
 
 		// Read the install directory
