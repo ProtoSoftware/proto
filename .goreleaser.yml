@@ -70,15 +70,6 @@ nfpms:
       - dst: ~/.config/config.json
         type: ghost
 
-    rpm:
-      signature:
-        key_file: "{{ .Env.GPG_KEY_PATH }}"
-
-    deb:
-      signature:
-        key_file: "{{ .Env.GPG_KEY_PATH }}"
-        type: origin
-
 release:
   github:
     owner: BitsOfAByte
