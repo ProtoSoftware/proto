@@ -87,7 +87,6 @@ func DownloadFile(path, url string) (os.FileInfo, error) {
 
 	Debug("DownloadFile: Downloading file from: " + url)
 
-	// Set up a progress bar
 	tmpl := `{{ cycle . "⠃" "⠆" "⠤" "⠰" "⠘" "⠉" }} Installing {{string . "src"}} [{{percent .}} | {{speed . "%s/s"}} | {{ rtime .}}]`
 	bar := pb.ProgressBarTemplate(tmpl).Start64(resp.ContentLength).Set("src", strings.Split(url, "/")[len(strings.Split(url, "/"))-1])
 	reader := bar.NewProxyReader(resp.Body)
@@ -184,7 +183,7 @@ func ExtractTar(path string, r io.Reader) error {
 	}
 }
 
-// Check a given files sum against the given sum
+// Check a given files sum against the given sum (Sha512)
 func MatchChecksum(filePath, sumPath string) (bool, error) {
 	// Get the sum of the file with crypto inbuilt
 	h := crypto.SHA512.New()

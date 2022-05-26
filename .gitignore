@@ -3,6 +3,10 @@
 dist/
 .build_data/
 
+# Tests 
+**/*/test_tmp/
+coverage.out
+
 # Secrets
 *.pem
 *.key
