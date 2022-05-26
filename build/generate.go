@@ -101,7 +101,7 @@ func generateMetainfo() {
   </screenshots>
 
   <url type="homepage">http://github.com/BitsOfAByte/proto</url>
-  <developer_name>BitsOfAByte<developer_name/>
+  <developer_name>BitsOfAByte</developer_name>
 
   <provides>
     <binary>proto</binary>
