@@ -69,40 +69,46 @@ StartupNotify=true
 
 [Desktop Action NewShortcut]
 Name=Install Latest Proton
-Exec=proto install -y`, version)
+Exec=proto install`, version)
 
-	createBuildFile("proto.desktop", fileData)
+	createBuildFile("dev.bitsofabyte.proto.desktop", fileData)
 }
 
 // Generate the .metainfo.xml file
 func generateMetainfo() {
 	fileData := `<?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2022 BitsOfAByte -->
-<component type="desktop">
-  <name>Proto</name>
-  <id>proto.desktop</id>
-  <developer_name>BitsOfAByte<developer_name/>
-  <launchable type="desktop-id">proto.desktop</launchable>
-  <metadata_license>CC0-1.0</metadata_license>
+<!-- Copyright 2020 BitsOfAByte -->
+<component type="desktop-application">
+  <id>dev.bitsofabyte.proto</id>
+  <metadata_license>MIT</metadata_license>
   <project_license>GPL-3.0-only</project_license>
-  <provides>
-  	<binary>proto</binary>
-  </provides>
-  <summary>Proto compatability tool manager</summary>
+  <name>Proto</name>
+  <summary>Manage custom Proton installations</summary>
+
   <description>
     <p>
-      Easily manage multiple custom installations of the Proton compatability tool.
+      Install and manage custom Proton installationsw easily and quickly.
     </p>
   </description>
-  <keywords>
-    <keyword>proto</keyword>
-    <keyword>utility</keyword>
-  </keywords>
-  <url type="bugtracker">https://github.com/BitsOfAByte/proto/issues</url>
-  <url type="contact">https://github.com/BitsOfAByte/proto</url>
+
+  <launchable type="desktop-id">dev.bitsofabyte.proto.desktop</launchable>
+
+  <screenshots>
+    <screenshot type="default">
+      <caption>The Main CLI Page</caption>
+      <image>https://github.com/BitsOfAByte/proto/blob/main/.assets/Screenshots/main_app_screenshot.png</image>
+    </screenshot>
+  </screenshots>
+
+  <url type="homepage">http://github.com/BitsOfAByte/proto</url>
+  <developer_name>BitsOfAByte<developer_name/>
+
+  <provides>
+    <binary>proto</binary>
+  </provides>
 </component>`
 
-	createBuildFile("proto.metainfo.xml", fileData)
+	createBuildFile("dev.bitsofabyte.proto.metainfo.xml", fileData)
 }
 
 // Fetch the icon from the assets and put it in the build directory

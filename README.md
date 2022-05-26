@@ -4,7 +4,7 @@
   
 Install and manage custom Proton installations with ease on supported systems.
 
-**[View Issues](https://github.com/BitsOfAByte/proto/issues) · [Download](https://github.com/BitsOfAByte/proto#Installation=) · [Contributing](https://github.com/BitsOfAByte/proto/blob/main/CONTRIBUTING.md)**
+**[View Issues](https://github.com/BitsOfAByte/proto/issues) · [Download](#installation-methods) · [Contributing](https://github.com/BitsOfAByte/proto/blob/main/CONTRIBUTING.md)**
   
 <a href="#"> 
   <img src="https://img.shields.io/github/downloads/BitsOfAByte/proto/total?style=flat" alt="Download Count Badge">

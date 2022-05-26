@@ -81,10 +81,12 @@ nfpms:
       - dst: ~/.config/proto/config.json
         type: ghost
 
-      - src: ./.build_data/proto.desktop
-        dst: /usr/share/applications/proto.desktop
-      - src: ./.build_data/proto.metainfo.xml
-        dst: /usr/share/metainfo/proto.metainfo.xml
+      - src: ./.build_data/dev.bitsofabyte.proto.desktop
+        dst: /usr/share/applications/dev.bitsofabyte.proto.desktop
+
+      - src: ./.build_data/dev.bitsofabyte.proto.metainfo.xml
+        dst: /usr/share/metainfo/dev.bitsofabyte.proto.metainfo.xml
+
       - src: ./.build_data/icon.png
         dst: /usr/share/icons/proto/icon.png
 
