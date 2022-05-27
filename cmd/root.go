@@ -5,7 +5,7 @@ Copyright © 2022 BitsOfAByte
 package cmd
 
 import (
-	"BitsOfAByte/proto/backend"
+	"BitsOfAByte/proto/shared"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -16,7 +16,7 @@ import (
 var rootCmd = &cobra.Command{
 	Use:     "proto",
 	Short:   "Install and manage Proton-GE installations ",
-	Version: backend.Version,
+	Version: shared.Version,
 }
 
 func Execute() {
@@ -46,8 +46,8 @@ func initConfig() {
 	viper.SetConfigType("json")
 
 	// Set the app default settings
-	viper.SetDefault("app.temp_storage", backend.UsePath("/tmp/proto/", true))
-	viper.SetDefault("app.install_directory", backend.UsePath("~/.steam/root/compatibilitytools.d/", true))
+	viper.SetDefault("app.temp_storage", shared.UsePath("/tmp/proto/", true))
+	viper.SetDefault("app.install_directory", shared.UsePath("~/.steam/root/compatibilitytools.d/", true))
 	viper.SetDefault("app.proton_source", "GloriousEggroll/proton-ge-custom")
 	viper.SetDefault("app.force_sum", "true")
 	viper.SetDefault("app.verbose", "false")

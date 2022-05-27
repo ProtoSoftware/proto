@@ -66,6 +66,7 @@ Actions=NewShortcut;
 Categories=ConsoleOnly;Utility;X-GNOME-Utilities;FileTools;
 Keywords=proton;steamplay;
 StartupNotify=true
+NoDisplay=true
 
 [Desktop Action NewShortcut]
 Name=Install Latest Proton
@@ -87,7 +88,7 @@ func generateMetainfo() {
 
   <description>
     <p>
-      Install and manage custom Proton installationsw easily and quickly.
+      Install and manage custom Proton installations easily and quickly.
     </p>
   </description>
 

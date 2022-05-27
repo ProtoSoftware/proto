@@ -5,7 +5,7 @@ Copyright © 2022 BitsOfAByte
 package cmd
 
 import (
-	"BitsOfAByte/proto/backend"
+	"BitsOfAByte/proto/shared"
 	"fmt"
 	"os"
 
@@ -14,12 +14,12 @@ import (
 
 // appUpdateCmd represents the update command
 var appUpdateCmd = &cobra.Command{
-	Use:   "app-update",
+	Use:   "update",
 	Short: "Update to the latest version of Proto",
 	Run: func(cmd *cobra.Command, args []string) {
 		forceFlag := cmd.Flag("force").Value.String()
 		if forceFlag == "true" {
-			backend.AppUpdate(backend.Version)
+			shared.AppUpdate(shared.Version)
 		} else {
 			fmt.Println("WARNING! You should not use the app-update command unless you have a manual installation of Proto.")
 			fmt.Println("If you are trying to update the app and have installed it with a package manager, use that instead.")

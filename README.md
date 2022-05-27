@@ -30,21 +30,16 @@ If you are using an Ubuntu-derivative system then use this installation method.
 
 <br>
   
-1. Add the repository hosting Proto to your apt sources directory
+1. Add the repository hosting Proto to your apt sources directory (Only run this once)
 ```
-echo "deb [trusted=yes] https://packages.bitsofabyte.dev/apt/ /" | sudo tee -a /etc/apt/sources.list.d/bitsofabyte.list
+echo "deb [trusted=yes] https://packages.bitsofabyte.dev/apt/ /" | sudo tee -a /etc/apt/sources.list.d/bitsofabyte.list && sudo apt update
 ``` 
 
-2. Fetch all sources again to detect the new list
-```
-sudo apt update
- ```
-
-3. Install Proto to your system
+2. Install Proto to your system
 ```
 sudo apt install proto
 ```
-  
+
 </details>  
 
 ---
@@ -56,21 +51,16 @@ If you are using Fedora, OpenSUSE, or any other system that supports the yum/dnf
 <summary>Show Steps</summary>
 <br>
   
-1. Add the repository hosting Proto to your yum repos directory
+1. Add the repository hosting Proto to your yum/dnf repo directory (Only run this once)
 ```
 echo "[BitsOfAByte]            
 name=BitsOfAByte Packages         
 baseurl=https://packages.bitsofabyte.dev/yum/
 enabled=1
-gpgcheck=0" | sudo tee -a /etc/yum.repos.d/bitsofabyte.repo
+gpgcheck=0" | sudo tee -a /etc/yum.repos.d/bitsofabyte.repo && sudo yum update
 ``` 
-  
-2. Fetch all sources again to detect the new list
-```
-sudo yum update
-```
 
-3. Install Proto to your system
+2. Install Proto to your system
 ```
 sudo yum install proto
 ```
@@ -90,10 +80,12 @@ If your distributions package manager is not listed here or you wish to use [Hom
 ```
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
+
 2. Add the tap for Proto to homebrew
 ```
 brew tap bitsofabyte/proto https://github.com/BitsOfAByte/proto.git
 ```
+
 3. Install proto to your system
 ```
 brew install proto

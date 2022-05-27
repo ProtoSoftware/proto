@@ -5,7 +5,7 @@ Copyright © 2022 BitsOfAByte
 package cmd
 
 import (
-	"BitsOfAByte/proto/backend"
+	"BitsOfAByte/proto/shared"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -23,7 +23,7 @@ var uninstallCmd = &cobra.Command{
 	Example:    "proto uninstall GE-Proton7-18",
 	Args:       cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		installDir := backend.UsePath(viper.GetString("app.install_directory"), true) + args[0]
+		installDir := shared.UsePath(viper.GetString("app.install_directory"), true) + args[0]
 
 		if _, err := os.Stat(installDir); os.IsNotExist(err) {
 			fmt.Println("The specified version of Proton was not found at " + filepath.Dir(installDir))
@@ -34,7 +34,7 @@ var uninstallCmd = &cobra.Command{
 		yesFlag := rootCmd.Flag("yes").Value.String()
 		if yesFlag != "true" {
 			// Prompt the user to confirm the uninstall.
-			resp := backend.Prompt("Are you sure you want to uninstall Proton "+args[0]+"? (y/N) ", false)
+			resp := shared.Prompt("Are you sure you want to uninstall Proton "+args[0]+"? (y/N) ", false)
 
 			if !resp {
 				os.Exit(0)

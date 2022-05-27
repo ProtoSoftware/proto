@@ -2,9 +2,8 @@
 Copyright © 2022 BitsOfAByte
 
 */
-package backend
+package shared
 
-// Package data
 var (
 	Version = "v0.0.0"
 	Commit  = "none"

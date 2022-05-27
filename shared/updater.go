@@ -2,7 +2,7 @@
 Copyright © 2022 BitsOfAByte
 
 */
-package backend
+package shared
 
 import (
 	"fmt"

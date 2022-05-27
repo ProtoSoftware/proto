@@ -5,7 +5,7 @@ Copyright © 2022 BitsOfAByte
 package cmd
 
 import (
-	"BitsOfAByte/proto/backend"
+	"BitsOfAByte/proto/shared"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -65,8 +65,8 @@ var tempCmd = &cobra.Command{
 	Example: "proto config temp /tmp/proto/",
 	Args:    cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Temp location is now: ", backend.UsePath(args[0], true))
-		viper.Set("app.temp_storage", backend.UsePath(args[0], true))
+		fmt.Println("Temp location is now: ", shared.UsePath(args[0], true))
+		viper.Set("app.temp_storage", shared.UsePath(args[0], true))
 		viper.WriteConfig()
 	},
 }
@@ -93,8 +93,8 @@ var installDirCmd = &cobra.Command{
 	Example: "proto config install ~/.steam/root/compatibilitytools.d/",
 	Args:    cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Install location is now: ", backend.UsePath(args[0], true))
-		viper.Set("app.install_directory", backend.UsePath(args[0], true))
+		fmt.Println("Install location is now: ", shared.UsePath(args[0], true))
+		viper.Set("app.install_directory", shared.UsePath(args[0], true))
 		viper.WriteConfig()
 	},
 }

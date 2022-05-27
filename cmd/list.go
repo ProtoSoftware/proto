@@ -5,7 +5,7 @@ Copyright © 2022 BitsOfAByte
 package cmd
 
 import (
-	"BitsOfAByte/proto/backend"
+	"BitsOfAByte/proto/shared"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -23,7 +23,7 @@ var listCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		// Read the install directory
-		installDir := backend.UsePath(viper.GetString("app.install_directory"), true)
+		installDir := shared.UsePath(viper.GetString("app.install_directory"), true)
 		dir, err := ioutil.ReadDir(installDir)
 		if err != nil {
 			// The directory doesnt exist, meaning there are no installed versions.
@@ -42,7 +42,7 @@ var listCmd = &cobra.Command{
 		table.SetHeader([]string{"Version", "Size", "Installed"})
 		var totalSize int64
 		for _, d := range dir {
-			size, err := backend.DirSize(installDir + d.Name())
+			size, err := shared.DirSize(installDir + d.Name())
 
 			// Something went wrong getting the size of the directory.
 			if err != nil {
@@ -51,7 +51,7 @@ var listCmd = &cobra.Command{
 			}
 
 			// Get the size of the directory, and add to the total size, then append to the table.
-			hSize, hUnit := backend.HumanReadableSize(size)
+			hSize, hUnit := shared.HumanReadableSize(size)
 			totalSize += size
 			table.Append([]string{d.Name(), fmt.Sprintf("%v%s", hSize, hUnit), d.ModTime().Format("2006-01-02")})
 		}
@@ -63,7 +63,7 @@ var listCmd = &cobra.Command{
 		}
 
 		// Format the total size and render the table.
-		tSize, tUnit := backend.HumanReadableSize(totalSize)
+		tSize, tUnit := shared.HumanReadableSize(totalSize)
 		table.SetFooter([]string{"Total", fmt.Sprintf("%v%s", tSize, tUnit), " "})
 		table.Render()
 	},

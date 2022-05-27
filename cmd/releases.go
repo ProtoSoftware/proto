@@ -5,7 +5,7 @@ Copyright © 2022 BitsOfAByte
 package cmd
 
 import (
-	"BitsOfAByte/proto/backend"
+	"BitsOfAByte/proto/shared"
 	"fmt"
 	"os"
 
@@ -21,7 +21,7 @@ var releasesCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		// Get the releases from the backend.
-		releases, err := backend.GetReleases()
+		releases, err := shared.GetReleases()
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
