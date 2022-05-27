@@ -81,32 +81,49 @@ func generateMetainfo() {
 <!-- Copyright 2020 BitsOfAByte -->
 <component type="desktop-application">
   <id>dev.bitsofabyte.proto</id>
+  <name>Proto</name>
+  <developer_name>BitsOfAByte</developer_name>
+  <content_rating type="oars-1.1" />
+  <icon type="local" width="128" height="128">/usr/share/icons/proto/icon.png</icon>
+  <launchable type="desktop-id">dev.bitsofabyte.proto.desktop</launchable>
   <metadata_license>MIT</metadata_license>
   <project_license>GPL-3.0-only</project_license>
-  <name>Proto</name>
   <summary>Manage custom Proton installations</summary>
-
   <description>
     <p>
-      Install and manage custom Proton installations easily and quickly.
+      Install and manage custom Proton installations easily and quickly using a clean user interface (coming soon), or even the command line.
     </p>
   </description>
 
-  <launchable type="desktop-id">dev.bitsofabyte.proto.desktop</launchable>
-
-  <screenshots>
-    <screenshot type="default">
-      <caption>The Main CLI Page</caption>
-      <image>https://github.com/BitsOfAByte/proto/blob/main/.assets/Screenshots/main_app_screenshot.png</image>
-    </screenshot>
-  </screenshots>
-
-  <url type="homepage">http://github.com/BitsOfAByte/proto</url>
-  <developer_name>BitsOfAByte</developer_name>
+  <categories>
+	<category>utility</category>
+  </categories>
 
   <provides>
     <binary>proto</binary>
   </provides>
+
+  <screenshots>
+    <screenshot type="default">
+      <caption>The Main CLI Page</caption>
+      <image type="source">https://raw.githubusercontent.com/BitsOfAByte/proto/main/.assets/Screenshots/main_app_screenshot.png</image>
+    </screenshot>
+  </screenshots>
+
+  <recommends>
+	<display_length compare="ge">medium</display_length>
+	<control>keyboard</control>
+	<control>pointing</control>
+	<control>console</control>
+  </recommends>
+
+  <url type="homepage">http://github.com/BitsOfAByte/proto</url>
+  <url type="bugtracker">https://github.com/BitsOfAByte/proto/issues</url>
+  <url type="faq">https://github.com/BitsOfAByte/proto#readme</url>
+  <url type="help">https://github.com/BitsOfAByte/proto#readme</url>
+  <url type="contact">https://github.com/BitsOfAByte/proto/discussions</url>
+  <url type="vcs-browser">https://github.com/BitsOfAByte/proto</url>
+  <url type="contribute">https://github.com/BitsOfAByte/proto/blob/main/CONTRIBUTING.md</url>
 </component>`
 
 	createBuildFile("dev.bitsofabyte.proto.metainfo.xml", fileData)
