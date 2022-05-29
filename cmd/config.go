@@ -8,6 +8,7 @@ import (
 	"BitsOfAByte/proto/shared"
 	"encoding/json"
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -37,7 +38,7 @@ var verboseCmd = &cobra.Command{
 	Args:      cobra.ExactArgs(1),
 	ValidArgs: []string{"true", "false"},
 	Run: func(cmd *cobra.Command, args []string) {
-		viper.Set("app.verbose", args[0])
+		viper.Set("cli.verbose", args[0])
 		viper.WriteConfig()
 	},
 }
@@ -50,7 +51,7 @@ var tempCmd = &cobra.Command{
 	Args:    cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Temp location is now: ", shared.UsePath(args[0], true))
-		viper.Set("app.temp_storage", shared.UsePath(args[0], true))
+		viper.Set("storage.tmp", shared.UsePath(args[0], true))
 		viper.WriteConfig()
 	},
 }
@@ -65,7 +66,7 @@ var checksumCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		fmt.Println("Force sum has been set to", args[0])
-		viper.Set("app.force_sum", args[0])
+		viper.Set("app.forcechecksum", args[0])
 		viper.WriteConfig()
 	},
 }
@@ -78,8 +79,19 @@ var installDirCmd = &cobra.Command{
 	Args:    cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Install location is now: ", shared.UsePath(args[0], true))
-		viper.Set("app.install_directory", shared.UsePath(args[0], true))
+		viper.Set("storage.installs", shared.UsePath(args[0], true))
 		viper.WriteConfig()
+	},
+}
+
+// resetCmd represents the refresh command
+var resetCmd = &cobra.Command{
+	Use:   "reset",
+	Short: "Reset the configuration to default",
+	Long:  "Reset the configuration to default, useful for when a major update occurs",
+	Run: func(cmd *cobra.Command, args []string) {
+		os.Remove(viper.ConfigFileUsed())
+		fmt.Println("Configuration has been reset to default")
 	},
 }
 
@@ -138,6 +150,7 @@ func init() {
 	configCmd.AddCommand(verboseCmd)
 	configCmd.AddCommand(showConfCmd)
 	configCmd.AddCommand(sourcesCmd)
+	configCmd.AddCommand(resetCmd)
 
 	sourcesCmd.AddCommand(addSourceCmd)
 	sourcesCmd.AddCommand(removeSourceCmd)
