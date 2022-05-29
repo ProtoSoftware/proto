@@ -17,6 +17,7 @@ func Debug(msg string) {
 	}
 }
 
+// Checks the given error to see if its nil, if its not then panics.
 func Check(err error) {
 	if err != nil {
 		panic(err)

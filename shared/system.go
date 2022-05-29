@@ -13,7 +13,6 @@ import (
 // Restricts running the binary as a root user. (Identified by UID == 0)
 func IsRoot() bool {
 	return os.Geteuid() == 0
-
 }
 
 // Detects if the binary is a preview version. (Identified by Version string)
@@ -21,7 +20,7 @@ func IsPreview() bool {
 	return Version == "0.0.1-next" && os.Getenv("PROTO_CONSENT") != "true"
 }
 
-// Prompt a user to confirm something
+// Prompt a user to confirm the given input with a yes/no prompt.
 func Prompt(message string, defaultValue bool) bool {
 	var response string
 

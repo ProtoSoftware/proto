@@ -45,6 +45,7 @@ func UsePath(path string, trailSlash bool) string {
 	return path
 }
 
+// CLears the configured temporary directory.
 func ClearTemp() error {
 	err := os.RemoveAll(UsePath(viper.GetString("storage.tmp"), false))
 	if err != nil {
@@ -112,7 +113,7 @@ func DownloadFile(path, url string) (os.FileInfo, error) {
 	return os.Stat(path)
 }
 
-// Attempts to exract the tar with the "tar" package.
+// Attempts to exract the tar with gnu-tar.
 func ExtractTar(tarPath, extractPath string) error {
 	cmd := exec.Command("tar", "-xf", tarPath, "-C", extractPath)
 	err := cmd.Start()
@@ -130,7 +131,7 @@ func ExtractTar(tarPath, extractPath string) error {
 	return nil
 }
 
-// Check a given files sum against the given sum
+// Check a given files sum against the given sum (sha512sum).
 func MatchChecksum(filePath, sumPath string) (bool, error) {
 	// Get the sum of the file with crypto inbuilt
 	h := crypto.SHA512.New()

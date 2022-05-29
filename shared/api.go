@@ -15,56 +15,61 @@ import (
 )
 
 // Format the the given index source into a valid format.
-func FmtRepo(entryIndex int) (string, string) {
+func FormatRepo(entryIndex int) (string, string) {
 
 	sources := viper.GetStringSlice("app.sources")
 
 	if len(sources) == 0 {
-		panic("No sources found.")
+		fmt.Println("No sources have been configured. Please add a source with `proto config sources add <owner/repo>`.")
+		os.Exit(1)
 	}
 
 	split := strings.Split(sources[entryIndex], "/")
 
 	return split[0], split[1]
-
 }
 
 // Get the source index the user is trying to install from.
-func GetSourceIndex() int {
+func PromptSourceIndex() int {
+	var source int
 	sources := viper.GetStringSlice("app.sources")
+
+	// if there is more than one source, ask the user which one they want to install from.
 	if len(sources) > 1 {
 		Debug("GetSourceIndex: Found " + fmt.Sprintf("%d", len(sources)) + " sources.")
-		Debug("GetSourceIndex: Prompting user for source.")
+
 		fmt.Println("\nMultiple sources found. Which one do you want to use?")
 		for i, source := range sources {
 			fmt.Printf("%d. %s\n", i+1, source)
 		}
 		fmt.Println("0. Cancel")
 		fmt.Print("Choice: ")
-		var source int
 		fmt.Scanf("%d", &source)
 
+		// If the user cancels, exit.
 		if source == 0 {
 			os.Exit(0)
 		}
 
+		// If the user selects a source that doesn't exist, try again.
 		if source < 1 || source > len(sources) {
 			Debug("GetSourceIndex: User chose an invalid source.")
-			return GetSourceIndex()
+			return PromptSourceIndex()
 		}
 
+		// If the user selects a source that does exist, return the index minus one.
 		fmt.Println("")
-
 		Debug("GetSourceIndex: User chose source: " + sources[source-1])
 		return source - 1
 	}
 
+	// If there is only one source, return the index.
 	return 0
 }
 
-// Fetch all of the releases from the proton source.
+// Get all of the releases from the proton source.
 func GetReleases(entryIndex int) ([]*github.RepositoryRelease, error) {
-	owner, repo := FmtRepo(entryIndex)
+	owner, repo := FormatRepo(entryIndex)
 	client := github.NewClient(nil)
 
 	releases, _, err := client.Repositories.ListReleases(context.Background(), owner, repo, nil)
@@ -80,7 +85,7 @@ func GetReleases(entryIndex int) ([]*github.RepositoryRelease, error) {
 
 // Fetch all of the data for a specified tag from the proton source.
 func GetReleaseData(entryIndex int, tag string) (*github.RepositoryRelease, error) {
-	owner, repo := FmtRepo(entryIndex)
+	owner, repo := FormatRepo(entryIndex)
 	client := github.NewClient(nil)
 
 	release, _, err := client.Repositories.GetReleaseByTag(context.Background(), owner, repo, tag)
@@ -100,16 +105,17 @@ func GetReleaseData(entryIndex int, tag string) (*github.RepositoryRelease, erro
 func GetTotalAssetSize(assets []*github.ReleaseAsset) int64 {
 	var size int
 
+	// Loop through all of the assets and add their sizes together.
 	for _, asset := range assets {
 		if strings.HasSuffix(asset.GetName(), ".tar.gz") {
-			size += asset.GetSize()
-		}
-
-		if strings.HasSuffix(asset.GetName(), ".sha512sum") {
-			size += asset.GetSize()
+			size += int(asset.GetSize())
 		}
 
 		if strings.HasSuffix(asset.GetName(), ".tar.xz") {
+			size += int(asset.GetSize())
+		}
+
+		if strings.HasSuffix(asset.GetName(), ".sha512sum") {
 			size += asset.GetSize()
 		}
 	}
@@ -132,7 +138,8 @@ func GetValidAssets(release *github.RepositoryRelease) (*github.ReleaseAsset, *g
 			break
 		}
 
-		// Find the needed files for an installation
+		// Find the files needed for installing the proton.
+		// Any tar file is supported, but it is recommended to use the .tar.xz format for better compression.
 		if strings.HasSuffix(asset.GetName(), ".tar.gz") {
 			Debug("GetValidAssets: Found a valid tar.gz asset.")
 			protonTar = asset
@@ -145,16 +152,15 @@ func GetValidAssets(release *github.RepositoryRelease) (*github.ReleaseAsset, *g
 		}
 	}
 
-	// No proton tar found, cannot install.
+	// There was no tarball found for the release.
 	if protonTar == nil {
 		return nil, nil, fmt.Errorf("unable to find a proton tarball")
 	}
 
-	// A proton tar was found, but there is no sha512sum file to verify it with.
+	// There was no valid checksum found for the release.
 	if protonSum == nil {
 		return protonTar, nil, nil
 	}
 
-	// We have everything we need to do a proper installation.
 	return protonTar, protonSum, nil
 }

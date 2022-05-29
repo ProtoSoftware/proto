@@ -31,8 +31,21 @@ Run without arguments to install to the latest version or specify a tag to insta
 		----------------------
 		**/
 
-		// If there are multiple sources, ask the user which one to use.
-		source := shared.GetSourceIndex()
+		// If there are multiple sources, ask the user which one to use or use the flag.
+		var source int
+		sourceFlag, _ := cmd.Flags().GetInt("source")
+		if sourceFlag > 0 {
+			sourceLen := len(viper.GetStringSlice("app.sources"))
+
+			if sourceFlag >= sourceLen {
+				fmt.Println("There is no source at index", sourceFlag, "you only have", sourceLen, "sources.")
+				os.Exit(1)
+			}
+
+			source = sourceFlag - 1
+		} else {
+			source = shared.PromptSourceIndex()
+		}
 
 		// Find the version to install, if none is specified, use the latest.
 		var tagData *github.RepositoryRelease
@@ -176,6 +189,7 @@ func init() {
 	// Register the command flags.
 	installCmd.Flags().StringP("install-dir", "i", "", "Specify the install directory.")
 	installCmd.Flags().BoolP("force-sum", "f", true, "Force checksum verification")
+	installCmd.Flags().IntP("source", "s", 0, "Specify the source to install from.")
 
 	// Bind the flags to the viper config.
 	viper.BindPFlag("storage.install", installCmd.Flags().Lookup("install-dir"))
