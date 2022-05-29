@@ -50,7 +50,7 @@ brews:
       email: actions@github.com
 
     dependencies:
-      - name: tar
+      - name: gnu-tar
 
     commit_msg_template: "build: Brew formula update for version {{ .Tag }}"
     description: |
