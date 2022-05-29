@@ -112,7 +112,7 @@ var sourcesCmd = &cobra.Command{
 }
 
 var addSourceCmd = &cobra.Command{
-	Use:     "add <url>",
+	Use:     "add <owner/repo>",
 	Short:   "Add a source to the list",
 	Example: "proto config sources add <url>",
 	Args:    cobra.ExactArgs(1),
@@ -131,7 +131,7 @@ var addSourceCmd = &cobra.Command{
 }
 
 var removeSourceCmd = &cobra.Command{
-	Use:     "remove <url>",
+	Use:     "remove <owner/repo>",
 	Short:   "Remove a source from the list",
 	Example: "proto config sources remove <url>",
 	Args:    cobra.ExactArgs(1),
