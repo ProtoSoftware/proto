@@ -42,11 +42,11 @@ func initConfig() {
 	configDir, _ := os.UserConfigDir()
 	viper.SetConfigName("config")
 	viper.AddConfigPath(configDir + "/proto")
-	viper.SetConfigType("json")
+	viper.SetConfigType("toml")
 
 	// Set the app default settings
 	viper.SetDefault("storage.tmp", shared.UsePath("/tmp/proto/", true))
-	viper.SetDefault("storage.", shared.UsePath("~/.steam/root/compatibilitytools.d/", true))
+	viper.SetDefault("storage.install", shared.UsePath("~/.steam/root/compatibilitytools.d/", true))
 	viper.SetDefault("app.sources", []string{"GloriousEggroll/proton-ge-custom"})
 	viper.SetDefault("app.forcechecksum", "true")
 	viper.SetDefault("cli.verbose", "false")

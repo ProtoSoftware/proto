@@ -23,7 +23,7 @@ var uninstallCmd = &cobra.Command{
 	Example:    "proto uninstall GE-Proton7-18",
 	Args:       cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		installDir := shared.UsePath(viper.GetString("storage.installs"), true) + args[0]
+		installDir := shared.UsePath(viper.GetString("storage.install"), true) + args[0]
 
 		if _, err := os.Stat(installDir); os.IsNotExist(err) {
 			fmt.Println("The specified version of Proton was not found at " + filepath.Dir(installDir))

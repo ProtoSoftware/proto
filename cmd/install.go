@@ -48,7 +48,7 @@ Run without arguments to install to the latest version or specify a tag to insta
 		}
 
 		// Get the installation directory. and flag values for confirmation.
-		installDir := shared.UsePath(viper.GetString("storage.installs"), true)
+		installDir := shared.UsePath(viper.GetString("storage.install"), true)
 		yesFlag := rootCmd.Flag("yes").Value.String()
 		s, m := shared.HumanReadableSize(shared.GetTotalAssetSize(tagData.Assets))
 
@@ -178,6 +178,6 @@ func init() {
 	installCmd.Flags().BoolP("force-sum", "f", true, "Force checksum verification")
 
 	// Bind the flags to the viper config.
-	viper.BindPFlag("storage.installs", installCmd.Flags().Lookup("install-dir"))
+	viper.BindPFlag("storage.install", installCmd.Flags().Lookup("install-dir"))
 	viper.BindPFlag("app.forcechecksum", installCmd.Flags().Lookup("force-sum"))
 }

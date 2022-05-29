@@ -6,8 +6,8 @@ package cmd
 
 import (
 	"BitsOfAByte/proto/shared"
-	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -24,9 +24,19 @@ var showConfCmd = &cobra.Command{
 	Use:   "show",
 	Short: "Show the current configuration",
 	Run: func(cmd *cobra.Command, args []string) {
-		formatOut, err := json.MarshalIndent(viper.AllSettings(), "", "  ")
+		// Run WriteConfig to make sure a config file exists.
+		err := viper.WriteConfig()
 		shared.Check(err)
-		fmt.Println(string(formatOut))
+
+		file, err := os.Open(viper.ConfigFileUsed())
+		shared.Check(err)
+
+		defer file.Close()
+
+		config, err := ioutil.ReadAll(file)
+		shared.Check(err)
+
+		fmt.Println(string(config))
 		fmt.Println("Located at: " + viper.ConfigFileUsed())
 	},
 }
@@ -79,7 +89,7 @@ var installDirCmd = &cobra.Command{
 	Args:    cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Install location is now: ", shared.UsePath(args[0], true))
-		viper.Set("storage.installs", shared.UsePath(args[0], true))
+		viper.Set("storage.install", shared.UsePath(args[0], true))
 		viper.WriteConfig()
 	},
 }
