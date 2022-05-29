@@ -139,5 +139,4 @@ func generateIcon() {
 
 	err = destFile.Sync()
 	shared.Check(err)
-
 }

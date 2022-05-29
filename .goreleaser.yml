@@ -49,6 +49,9 @@ brews:
       name: github-actions
       email: actions@github.com
 
+    dependencies:
+      - name: tar
+
     commit_msg_template: "build: Brew formula update for version {{ .Tag }}"
     description: |
       Proto compatability tool manager
