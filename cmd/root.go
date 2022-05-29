@@ -21,8 +21,9 @@ var rootCmd = &cobra.Command{
 
 func Execute() {
 	err := rootCmd.Execute()
-	shared.Check(err)
-
+	if err != nil {
+		os.Exit(1)
+	}
 }
 
 func init() {
