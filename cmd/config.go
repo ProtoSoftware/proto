@@ -105,12 +105,14 @@ var resetCmd = &cobra.Command{
 	},
 }
 
+// sourceCmd represents the source command
 var sourcesCmd = &cobra.Command{
 	Use:   "sources <cmd>",
 	Short: "Modify the sources list",
 	Args:  cobra.ExactArgs(1),
 }
 
+// addSourceCmd represents the add command
 var addSourceCmd = &cobra.Command{
 	Use:     "add <owner/repo>",
 	Short:   "Add a source to the list",
@@ -130,6 +132,7 @@ var addSourceCmd = &cobra.Command{
 	},
 }
 
+// removeSourceCmd represents the remove command
 var removeSourceCmd = &cobra.Command{
 	Use:     "remove <owner/repo>",
 	Short:   "Remove a source from the list",
@@ -151,6 +154,17 @@ var removeSourceCmd = &cobra.Command{
 	},
 }
 
+var listSourcesCmd = &cobra.Command{
+	Use:   "list",
+	Short: "List all sources",
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("Currently configured sources:")
+		for _, v := range viper.GetStringSlice("app.sources") {
+			fmt.Println("- " + v)
+		}
+	},
+}
+
 func init() {
 	rootCmd.AddCommand(configCmd)
 
@@ -164,4 +178,5 @@ func init() {
 
 	sourcesCmd.AddCommand(addSourceCmd)
 	sourcesCmd.AddCommand(removeSourceCmd)
+	sourcesCmd.AddCommand(listSourcesCmd)
 }
