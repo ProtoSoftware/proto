@@ -42,7 +42,7 @@ changelog:
 
 brews:
   - tap:
-      owner: BitsOfAByte
+      owner: ProtoSoftware
       name: proto
 
     commit_author:
@@ -107,6 +107,6 @@ publishers:
 
 release:
   github:
-    owner: BitsOfAByte
+    owner: ProtoSoftware
     name: proto
   prerelease: auto
