@@ -23,7 +23,7 @@ var listCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		// Read the install directory
-		installDir := shared.UsePath(viper.GetString("app.install_directory"), true)
+		installDir := shared.UsePath(viper.GetString("storage.installs"), true)
 		dir, err := ioutil.ReadDir(installDir)
 		if err != nil {
 			// The directory doesnt exist, meaning there are no installed versions.

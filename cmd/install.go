@@ -48,7 +48,7 @@ Run without arguments to install to the latest version or specify a tag to insta
 		}
 
 		// Get the installation directory. and flag values for confirmation.
-		installDir := shared.UsePath(viper.GetString("app.install_directory"), true)
+		installDir := shared.UsePath(viper.GetString("storage.installs"), true)
 		yesFlag := rootCmd.Flag("yes").Value.String()
 		s, m := shared.HumanReadableSize(shared.GetTotalAssetSize(tagData.Assets))
 
@@ -91,7 +91,7 @@ Run without arguments to install to the latest version or specify a tag to insta
 
 		// Handle the lack of a checksum depending on the user's preference.
 		if sum == nil {
-			forced := viper.GetBool("app.force_sum")
+			forced := viper.GetBool("app.forcechecksum")
 
 			if forced {
 				fmt.Println("No checksum file found, aborting install.")
@@ -102,7 +102,7 @@ Run without arguments to install to the latest version or specify a tag to insta
 		}
 
 		// Download the assets to the temp directory.
-		tmp := shared.UsePath(viper.GetString("app.temp_storage"), true)
+		tmp := shared.UsePath(viper.GetString("storage.tmp"), true)
 
 		// Download the tarball.
 		_, err = shared.DownloadFile(tmp+tar.GetName(), tar.GetBrowserDownloadURL())
@@ -120,12 +120,12 @@ Run without arguments to install to the latest version or specify a tag to insta
 			shared.Check(err)
 
 			match, err := shared.MatchChecksum(tmp+tar.GetName(), tmp+sum.GetName())
-			forceSum := viper.GetBool("app.force_sum")
+			forceSum := viper.GetBool("app.forcechecksum")
 
 			shared.Check(err)
 
 			// If the checksums don't match and force sum is enabled, abort.
-			if !match && viper.GetBool("app.force_sum") {
+			if !match && viper.GetBool("app.forcechecksum") {
 				fmt.Println("Checksums do not match, aborting install.")
 				os.Exit(1)
 			}
@@ -178,6 +178,6 @@ func init() {
 	installCmd.Flags().BoolP("force-sum", "f", true, "Force checksum verification")
 
 	// Bind the flags to the viper config.
-	viper.BindPFlag("app.install_directory", installCmd.Flags().Lookup("install-dir"))
-	viper.BindPFlag("app.force_sum", installCmd.Flags().Lookup("force-sum"))
+	viper.BindPFlag("storage.installs", installCmd.Flags().Lookup("install-dir"))
+	viper.BindPFlag("app.forcechecksum", installCmd.Flags().Lookup("force-sum"))
 }

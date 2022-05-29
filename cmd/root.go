@@ -33,7 +33,7 @@ func init() {
 	rootCmd.PersistentFlags().BoolP("yes", "y", false, "Skip all confirmation prompts")
 
 	// Register flags to config
-	viper.BindPFlag("app.verbose", rootCmd.PersistentFlags().Lookup("verbose"))
+	viper.BindPFlag("cli.verbose", rootCmd.PersistentFlags().Lookup("verbose"))
 }
 
 // Iniotialized protos configuration file
@@ -45,11 +45,11 @@ func initConfig() {
 	viper.SetConfigType("json")
 
 	// Set the app default settings
-	viper.SetDefault("app.temp_storage", shared.UsePath("/tmp/proto/", true))
-	viper.SetDefault("app.install_directory", shared.UsePath("~/.steam/root/compatibilitytools.d/", true))
+	viper.SetDefault("storage.tmp", shared.UsePath("/tmp/proto/", true))
+	viper.SetDefault("storage.", shared.UsePath("~/.steam/root/compatibilitytools.d/", true))
 	viper.SetDefault("app.sources", []string{"GloriousEggroll/proton-ge-custom"})
-	viper.SetDefault("app.force_sum", "true")
-	viper.SetDefault("app.verbose", "false")
+	viper.SetDefault("app.forcechecksum", "true")
+	viper.SetDefault("cli.verbose", "false")
 
 	// Write a configuration file if it doesnt exist, or throw an error if something goes wrong
 	if err := viper.ReadInConfig(); err != nil {

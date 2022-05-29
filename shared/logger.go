@@ -12,7 +12,7 @@ import (
 
 // Log a message if the logger is enabled.
 func Debug(msg string) {
-	if viper.GetBool("app.verbose") {
+	if viper.GetBool("cli.verbose") {
 		fmt.Printf("[DEBUG] %s\n", msg)
 	}
 }

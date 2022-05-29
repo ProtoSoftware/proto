@@ -46,7 +46,7 @@ func UsePath(path string, trailSlash bool) string {
 }
 
 func ClearTemp() error {
-	err := os.RemoveAll(UsePath(viper.GetString("app.temp_storage"), false))
+	err := os.RemoveAll(UsePath(viper.GetString("storage.tmp"), false))
 	if err != nil {
 		return err
 	}
