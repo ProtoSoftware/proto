@@ -4,11 +4,11 @@
   
 Install and manage custom Proton installations with ease on supported systems.
 
-**[View Issues](https://github.com/BitsOfAByte/proto/issues) · [Download](#installation-methods) · [Contributing](https://github.com/BitsOfAByte/proto/blob/main/CONTRIBUTING.md)**
+**[View Issues](https://github.com/ProtoSoftware/proto/issues) · [Download](#installation-methods) · [Contributing](https://github.com/ProtoSoftware/proto/blob/main/CONTRIBUTING.md)**
   
 <a href="#"> 
-  <img src="https://img.shields.io/github/downloads/BitsOfAByte/proto/total?style=flat" alt="Download Count Badge">
-  <img src="https://img.shields.io/github/v/tag/BitsOfAByte/proto?color=blue&label=Version&sort=semver&style=flat" alt="Release Badge">
+  <img src="https://img.shields.io/github/downloads/ProtoSoftware/proto/total?style=flat" alt="Download Count Badge">
+  <img src="https://img.shields.io/github/v/tag/ProtoSoftware/proto?color=blue&label=Version&sort=semver&style=flat" alt="Release Badge">
 </a>
   
 </div>
@@ -85,7 +85,7 @@ If your distributions package manager is not listed here or you wish to use [Hom
 
 2. Add the tap for Proto to homebrew
 ```
-brew tap bitsofabyte/proto https://github.com/BitsOfAByte/proto.git
+brew tap ProtoSoftware/proto https://github.com/ProtoSoftware/proto.git
 ```
 
 3. Install proto to your system
@@ -102,7 +102,7 @@ Manually install a Binary from the release Archives.
 <details>  
 <summary>Show Steps</summary>
   
-1. Download the [newest release](https://github.com/BitsOfAByte/proto/releases/latest) for your system/architecture
+1. Download the [newest release](https://github.com/ProtoSoftware/proto/releases/latest) for your system/architecture
 2. Extract the binary into your system path or add the binary to your path.
 
 If you aren't sure on what architecture you need to download, you should try `amd64` first as it is the most common for everyday hardware.
@@ -119,7 +119,7 @@ Build Proto directly from the GitHub source for any supported platform.
 Building Proto from source is not recommended for beginners, but if you know what you're doing then follow these steps: 
 1. Install [Go](https://go.dev/) on your system
 2. Download the [GoReleaser](https://goreleaser.com/) package
-3. Clone the repository to your system with `git clone https://github.com/BitsOfAByte/proto`
+3. Clone the repository to your system with `git clone https://github.com/ProtoSoftware/proto`
 4. Inside the repository directory, run `goreleaser build --single-target --rm-dist --snapshot` to build.
 
 You will find the compiled binary for your OS & Arch inside of the `/dist` folder.

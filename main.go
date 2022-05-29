@@ -5,8 +5,8 @@ Copyright © 2022 BitsOfAByte
 package main
 
 import (
-	"BitsOfAByte/proto/cmd"
-	"BitsOfAByte/proto/shared"
+	"ProtoSoftware/proto/cmd"
+	"ProtoSoftware/proto/shared"
 	"fmt"
 	"os"
 )

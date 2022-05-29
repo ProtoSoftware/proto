@@ -1,4 +1,4 @@
-module BitsOfAByte/proto
+module ProtoSoftware/proto
 
 go 1.18
 

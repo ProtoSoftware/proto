@@ -1,7 +1,7 @@
 package main
 
 import (
-	"BitsOfAByte/proto/shared"
+	"ProtoSoftware/proto/shared"
 	"fmt"
 	"io"
 	"os"
@@ -101,7 +101,7 @@ func generateMetainfo() {
   <screenshots>
     <screenshot type="default">
       <caption>The Main CLI Page</caption>
-      <image type="source">https://raw.githubusercontent.com/BitsOfAByte/proto/main/.assets/Screenshots/main_app_screenshot.png</image>
+      <image type="source">https://raw.githubusercontent.com/ProtoSoftware/proto/main/.assets/Screenshots/main_app_screenshot.png</image>
     </screenshot>
   </screenshots>
 
@@ -112,13 +112,13 @@ func generateMetainfo() {
 	<control>console</control>
   </recommends>
 
-  <url type="homepage">http://github.com/BitsOfAByte/proto</url>
-  <url type="bugtracker">https://github.com/BitsOfAByte/proto/issues</url>
-  <url type="faq">https://github.com/BitsOfAByte/proto#readme</url>
-  <url type="help">https://github.com/BitsOfAByte/proto#readme</url>
-  <url type="contact">https://github.com/BitsOfAByte/proto/discussions</url>
-  <url type="vcs-browser">https://github.com/BitsOfAByte/proto</url>
-  <url type="contribute">https://github.com/BitsOfAByte/proto/blob/main/CONTRIBUTING.md</url>
+  <url type="homepage">http://github.com/ProtoSoftware/proto</url>
+  <url type="bugtracker">https://github.com/ProtoSoftware/proto/issues</url>
+  <url type="faq">https://github.com/ProtoSoftware/proto#readme</url>
+  <url type="help">https://github.com/ProtoSoftware/proto#readme</url>
+  <url type="contact">https://github.com/ProtoSoftware/proto/discussions</url>
+  <url type="vcs-browser">https://github.com/ProtoSoftware/proto</url>
+  <url type="contribute">https://github.com/ProtoSoftware/proto/blob/main/CONTRIBUTING.md</url>
 </component>`
 
 	createBuildFile("dev.bitsofabyte.proto.metainfo.xml", fileData)

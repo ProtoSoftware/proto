@@ -16,9 +16,9 @@ builds:
       - arm64
     ldflags:
       - "-s -w"
-      - "-X 'BitsOfAByte/proto/shared.Version={{.Version}}'"
-      - "-X 'BitsOfAByte/proto/shared.Commit={{.Commit}}'"
-      - "-X 'BitsOfAByte/proto/shared.Date={{.Date}}'"
+      - "-X 'ProtoSoftware/proto/shared.Version={{.Version}}'"
+      - "-X 'ProtoSoftware/proto/shared.Commit={{.Commit}}'"
+      - "-X 'ProtoSoftware/proto/shared.Date={{.Date}}'"
 
 archives:
   - format: zip
@@ -55,7 +55,7 @@ brews:
     commit_msg_template: "build: Brew formula update for version {{ .Tag }}"
     description: |
       Proto compatability tool manager
-    homepage: "https://github.com/BitsOfAByte/proto"
+    homepage: "https://github.com/ProtoSoftware/proto"
     license: "GPL-3.0-only"
     install: |
       bin.install "proto"
@@ -63,7 +63,7 @@ brews:
 nfpms:
   - vendor: BitsOfAByte
     id: nfpm
-    homepage: https://github.com/BitsOfAByte/proto
+    homepage: https://github.com/ProtoSoftware/proto
     maintainer: BitsOfAByte
     description: |
       Proto compatability tool manager
