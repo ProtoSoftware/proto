@@ -22,6 +22,8 @@ Install Proto to your system using one of the methods listed below, then simply 
 To see all configuration options for Proto run `proto config -h`
 
 ## Installation Methods
+The following packages are required to use Proto: `tar`.
+
 ### APT Package Manager
 If you are using an Ubuntu-derivative system then use this installation method.
 

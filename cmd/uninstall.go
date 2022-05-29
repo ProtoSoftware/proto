@@ -43,10 +43,7 @@ var uninstallCmd = &cobra.Command{
 
 		// Remove the directory for the specified version.
 		err := os.RemoveAll(installDir)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
+		shared.Check(err)
 
 		fmt.Printf("Successfully uninstalled %s from %s\n", args[0], filepath.Dir(installDir))
 	},

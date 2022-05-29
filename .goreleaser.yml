@@ -16,9 +16,9 @@ builds:
       - arm64
     ldflags:
       - "-s -w"
-      - "-X 'BitsOfAByte/proto/backend.Version={{.Version}}'"
-      - "-X 'BitsOfAByte/proto/backend.Commit={{.Commit}}'"
-      - "-X 'BitsOfAByte/proto/backend.Date={{.Date}}'"
+      - "-X 'BitsOfAByte/proto/shared.Version={{.Version}}'"
+      - "-X 'BitsOfAByte/proto/shared.Commit={{.Commit}}'"
+      - "-X 'BitsOfAByte/proto/shared.Date={{.Date}}'"
 
 archives:
   - format: zip
@@ -67,9 +67,13 @@ nfpms:
     license: "GPL-3.0"
     priority: extra
     section: Utilities
+
     formats:
       - deb
       - rpm
+
+    dependencies:
+      - tar
 
     file_name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
 

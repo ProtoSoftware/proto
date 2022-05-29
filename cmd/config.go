@@ -8,7 +8,6 @@ import (
 	"BitsOfAByte/proto/shared"
 	"encoding/json"
 	"fmt"
-	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -25,10 +24,7 @@ var showConfCmd = &cobra.Command{
 	Short: "Show the current configuration",
 	Run: func(cmd *cobra.Command, args []string) {
 		formatOut, err := json.MarshalIndent(viper.AllSettings(), "", "  ")
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
+		shared.Check(err)
 		fmt.Println(string(formatOut))
 		fmt.Println("Located at: " + viper.ConfigFileUsed())
 	},
@@ -42,18 +38,6 @@ var verboseCmd = &cobra.Command{
 	ValidArgs: []string{"true", "false"},
 	Run: func(cmd *cobra.Command, args []string) {
 		viper.Set("app.verbose", args[0])
-		viper.WriteConfig()
-	},
-}
-
-// sourceCmd represents the source command
-var sourceCmd = &cobra.Command{
-	Use:     "source <owner/repo>",
-	Short:   "Change the source of Proton downloads",
-	Example: "proto config source GloriousEggroll/proton-ge-custom",
-	Args:    cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
-		viper.Set("app.proton_source", args[0])
 		viper.WriteConfig()
 	},
 }
@@ -99,12 +83,62 @@ var installDirCmd = &cobra.Command{
 	},
 }
 
+var sourcesCmd = &cobra.Command{
+	Use:   "sources <cmd>",
+	Short: "Modify the sources list",
+	Args:  cobra.ExactArgs(1),
+}
+
+var addSourceCmd = &cobra.Command{
+	Use:     "add <url>",
+	Short:   "Add a source to the list",
+	Example: "proto config sources add <url>",
+	Args:    cobra.ExactArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+
+		for _, v := range viper.GetStringSlice("app.sources") {
+			if v == args[0] {
+				fmt.Println("Source already exists")
+				return
+			}
+		}
+
+		viper.Set("app.sources", append(viper.GetStringSlice("app.sources"), args[0]))
+		viper.WriteConfig()
+	},
+}
+
+var removeSourceCmd = &cobra.Command{
+	Use:     "remove <url>",
+	Short:   "Remove a source from the list",
+	Example: "proto config sources remove <url>",
+	Args:    cobra.ExactArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		// find the source in the list
+		var sources = viper.GetStringSlice("app.sources")
+
+		for i, source := range sources {
+			if source == args[0] {
+				sources = append(sources[:i], sources[i+1:]...)
+				break
+			}
+		}
+
+		viper.Set("app.sources", sources)
+		viper.WriteConfig()
+	},
+}
+
 func init() {
 	rootCmd.AddCommand(configCmd)
-	configCmd.AddCommand(sourceCmd)
+
 	configCmd.AddCommand(tempCmd)
 	configCmd.AddCommand(installDirCmd)
 	configCmd.AddCommand(checksumCmd)
 	configCmd.AddCommand(verboseCmd)
 	configCmd.AddCommand(showConfCmd)
+	configCmd.AddCommand(sourcesCmd)
+
+	sourcesCmd.AddCommand(addSourceCmd)
+	sourcesCmd.AddCommand(removeSourceCmd)
 }

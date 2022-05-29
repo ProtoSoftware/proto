@@ -1,15 +1,16 @@
 package main
 
 import (
+	"BitsOfAByte/proto/shared"
 	"fmt"
 	"io"
 	"os"
 )
 
+var build_dir = "./.build_data/"
+
 // Tasks to run as a pre-build hook
 func main() {
-	build_dir := "./.build_data/"
-
 	createBuildDir(build_dir)
 
 	generateDesktop()
@@ -27,19 +28,13 @@ func createBuildDir(dir string) {
 
 // Create a file in the build directory
 func createBuildFile(fileName string, data string) {
-	file, err := os.Create("./.build_data/" + fileName)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	file, err := os.Create(build_dir + fileName)
+	shared.Check(err)
 
 	defer file.Close()
 
 	_, err = file.WriteString(data)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	shared.Check(err)
 
 	file.Sync()
 }
@@ -132,24 +127,17 @@ func generateMetainfo() {
 // Fetch the icon from the assets and put it in the build directory
 func generateIcon() {
 	srcFile, err := os.Open("./.assets/Logos/icon.png")
-	if err != nil {
-		panic(err)
-	}
+	shared.Check(err)
 	defer srcFile.Close()
 
-	destFile, err := os.Create("./.build_data/icon.png")
-	if err != nil {
-		panic(err)
-	}
+	destFile, err := os.Create(build_dir + "icon.png")
+	shared.Check(err)
 	defer destFile.Close()
 
 	_, err = io.Copy(destFile, srcFile)
-	if err != nil {
-		panic(err)
-	}
+	shared.Check(err)
 
 	err = destFile.Sync()
-	if err != nil {
-		panic(err)
-	}
+	shared.Check(err)
+
 }

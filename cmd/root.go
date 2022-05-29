@@ -21,9 +21,8 @@ var rootCmd = &cobra.Command{
 
 func Execute() {
 	err := rootCmd.Execute()
-	if err != nil {
-		os.Exit(1)
-	}
+	shared.Check(err)
+
 }
 
 func init() {
@@ -48,7 +47,7 @@ func initConfig() {
 	// Set the app default settings
 	viper.SetDefault("app.temp_storage", shared.UsePath("/tmp/proto/", true))
 	viper.SetDefault("app.install_directory", shared.UsePath("~/.steam/root/compatibilitytools.d/", true))
-	viper.SetDefault("app.proton_source", "GloriousEggroll/proton-ge-custom")
+	viper.SetDefault("app.sources", []string{"GloriousEggroll/proton-ge-custom"})
 	viper.SetDefault("app.force_sum", "true")
 	viper.SetDefault("app.verbose", "false")
 

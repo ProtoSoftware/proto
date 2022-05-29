@@ -20,12 +20,12 @@ var releasesCmd = &cobra.Command{
 	Example: `proto releases --limit 5`,
 	Run: func(cmd *cobra.Command, args []string) {
 
+		// If there are multiple sources, ask the user which one to use.
+		source := shared.GetSourceIndex()
+
 		// Get the releases from the backend.
-		releases, err := shared.GetReleases()
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
+		releases, err := shared.GetReleases(source)
+		shared.Check(err)
 
 		// Create a table to display the releases.
 		table := tablewriter.NewWriter(os.Stdout)

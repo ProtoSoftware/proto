@@ -5,14 +5,13 @@ Copyright © 2022 BitsOfAByte
 package shared
 
 import (
-	"archive/tar"
-	"compress/gzip"
 	"crypto"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -113,75 +112,22 @@ func DownloadFile(path, url string) (os.FileInfo, error) {
 	return os.Stat(path)
 }
 
-// Extracts a tarball to the given path
-func ExtractTar(path string, r io.Reader) error {
+// Attempts to exract the tar with the "tar" package.
+func ExtractTar(tarPath, extractPath string) error {
+	cmd := exec.Command("tar", "-xf", tarPath, "-C", extractPath)
+	err := cmd.Start()
 
-	// If path doesnt exist create it
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		err := os.MkdirAll(filepath.Dir(path), os.ModePerm)
-		if err != nil {
-			return err
-		}
-
-		Debug("ExtractTar: Created directory: " + filepath.Dir(path))
-	}
-
-	gzr, err := gzip.NewReader(r)
 	if err != nil {
 		return err
 	}
 
-	defer gzr.Close()
-	tr := tar.NewReader(gzr)
+	err = cmd.Wait()
 
-	Debug("ExtractTar: Extracting tarball to: " + path)
-
-	for {
-		header, err := tr.Next()
-
-		switch {
-		// No more files to extract
-		case err == io.EOF:
-			return nil
-		// Something went wrong, return the error.
-		case err != nil:
-			return err
-		// Skip all nil headers.
-		case header == nil:
-			continue
-		}
-
-		Debug("ExtractTar: Inflating: " + header.Name)
-
-		// Send all files to the path given
-		target := filepath.Join(path, header.Name)
-
-		switch header.Typeflag {
-
-		// Create directory if it doesn't exist
-		case tar.TypeDir:
-			if _, err := os.Stat(target); err != nil {
-				if err := os.MkdirAll(target, 0755); err != nil {
-					return err
-				}
-			}
-
-		// Create files with their contents
-		case tar.TypeReg:
-			f, err := os.OpenFile(target, os.O_CREATE|os.O_RDWR, os.FileMode(header.Mode))
-			if err != nil {
-				return err
-			}
-
-			// Copy the contents of the file
-			if _, err := io.Copy(f, tr); err != nil {
-				return err
-			}
-
-			// Close the file after copying, do not defer
-			f.Close()
-		}
+	if err != nil {
+		return err
 	}
+
+	return nil
 }
 
 // Check a given files sum against the given sum
@@ -207,7 +153,7 @@ func MatchChecksum(filePath, sumPath string) (bool, error) {
 
 	// Check all lines for the files sum
 	for _, line := range strings.Split(string(sum), "\n") {
-		Debug("MatchChecksum: Attempting to match checksum: " + strings.TrimSuffix(line, "\n") + " to: " + string(h.Sum(nil)))
+		Debug("MatchChecksum: Attempting to match checksum for files: " + filePath + " and " + sumPath)
 		if strings.HasPrefix(line, fmt.Sprintf("%x", h.Sum(nil))) {
 			return true, nil
 		}

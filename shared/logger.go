@@ -16,3 +16,9 @@ func Debug(msg string) {
 		fmt.Printf("[DEBUG] %s\n", msg)
 	}
 }
+
+func Check(err error) {
+	if err != nil {
+		panic(err)
+	}
+}

@@ -18,10 +18,7 @@ func AppUpdate(version string) {
 	latest, found, err := updater.DetectLatest("BitsOfAByte/proto")
 
 	// Unknown error occurred, abort update process.
-	if err != nil {
-		fmt.Printf("error occurred while detecting version: %v", err)
-		return
-	}
+	Check(err)
 
 	// Specified OS or Architechture is not supported.
 	if !found {

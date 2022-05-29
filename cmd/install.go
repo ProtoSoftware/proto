@@ -31,22 +31,19 @@ Run without arguments to install to the latest version or specify a tag to insta
 		----------------------
 		**/
 
+		// If there are multiple sources, ask the user which one to use.
+		source := shared.GetSourceIndex()
+
 		// Find the version to install, if none is specified, use the latest.
 		var tagData *github.RepositoryRelease
 		switch len(args) {
 		case 0: // Install latest tag.
-			data, err := shared.GetReleases()
-			if err != nil {
-				fmt.Println(err)
-				os.Exit(1)
-			}
+			data, err := shared.GetReleases(source)
+			shared.Check(err)
 			tagData = data[0]
 		default: // Install a specific tag.
-			data, err := shared.GetReleaseData(args[0])
-			if err != nil {
-				fmt.Println(err)
-				os.Exit(1)
-			}
+			data, err := shared.GetReleaseData(source, args[0])
+			shared.Check(err)
 			tagData = data
 		}
 
@@ -90,10 +87,7 @@ Run without arguments to install to the latest version or specify a tag to insta
 
 		// Fetch valid assets from the release.
 		tar, sum, err := shared.GetValidAssets(tagData)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
+		shared.Check(err)
 
 		// Handle the lack of a checksum depending on the user's preference.
 		if sum == nil {
@@ -112,10 +106,7 @@ Run without arguments to install to the latest version or specify a tag to insta
 
 		// Download the tarball.
 		_, err = shared.DownloadFile(tmp+tar.GetName(), tar.GetBrowserDownloadURL())
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
+		shared.Check(err)
 
 		/**
 		----------------------
@@ -126,18 +117,12 @@ Run without arguments to install to the latest version or specify a tag to insta
 		// If it exists, download the checksum file and verify it against the downloaded tarball.
 		if sum != nil {
 			_, err = shared.DownloadFile(tmp+sum.GetName(), sum.GetBrowserDownloadURL())
-			if err != nil {
-				fmt.Println(err)
-				os.Exit(1)
-			}
+			shared.Check(err)
 
 			match, err := shared.MatchChecksum(tmp+tar.GetName(), tmp+sum.GetName())
 			forceSum := viper.GetBool("app.force_sum")
 
-			if err != nil {
-				fmt.Println(err)
-				os.Exit(1)
-			}
+			shared.Check(err)
 
 			// If the checksums don't match and force sum is enabled, abort.
 			if !match && viper.GetBool("app.force_sum") {
@@ -152,6 +137,7 @@ Run without arguments to install to the latest version or specify a tag to insta
 				if !resp {
 					os.Exit(0)
 				}
+
 			} else if !match && !forceSum && yesFlag == "true" {
 				// -y flag is set, warn the user that the checksums don't match.
 				fmt.Println("Warning! Checksums do not match, continuing without verification due to -y flag.")
@@ -171,20 +157,8 @@ Run without arguments to install to the latest version or specify a tag to insta
 
 		fmt.Println("Extracting files...")
 
-		// Extract the tarball.
-		tarReader, err := os.Open(tmp + tar.GetName())
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-		err = shared.ExtractTar(installDir, tarReader)
-
-		defer tarReader.Close()
-
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
+		err = shared.ExtractTar(tmp+tar.GetName(), installDir)
+		shared.Check(err)
 
 		/**
 		----------------------
