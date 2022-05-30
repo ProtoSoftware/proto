@@ -41,7 +41,7 @@ Run without arguments to install to the latest version or specify a tag to insta
 		if sourceFlag > 0 {
 			sourceLen := len(viper.GetStringSlice("app.sources"))
 
-			if sourceFlag >= sourceLen {
+			if sourceFlag-1 >= sourceLen {
 				fmt.Println("There is no source at index", sourceFlag, "you only have", sourceLen, "sources.")
 				os.Exit(1)
 			}
