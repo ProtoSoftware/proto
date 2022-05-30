@@ -25,6 +25,10 @@ Run without arguments to install to the latest version or specify a tag to insta
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 
+		// Prevent the program from having another long-running process
+		lock := shared.HandleLock()
+		defer lock.Unlock()
+
 		/**
 		----------------------
 		|     Fetch Logic    |
@@ -64,6 +68,12 @@ Run without arguments to install to the latest version or specify a tag to insta
 		installDir := shared.UsePath(viper.GetString("storage.install"), true)
 		yesFlag := rootCmd.Flag("yes").Value.String()
 		s, m := shared.HumanReadableSize(shared.GetTotalAssetSize(tagData.Assets))
+
+		/**
+		----------------------
+		|    Overlap Logic   |
+		----------------------
+		**/
 
 		// Check if the directory exists already, meaning we're trying to install a version that's already installed.
 		if folderInfo, err := os.Stat(installDir + tagData.GetTagName()); err == nil && folderInfo.IsDir() {

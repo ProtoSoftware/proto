@@ -23,6 +23,11 @@ var uninstallCmd = &cobra.Command{
 	Example:    "proto uninstall GE-Proton7-18",
 	Args:       cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
+
+		// Prevent the program from having another long-running process
+		lock := shared.HandleLock()
+		defer lock.Unlock()
+
 		installDir := shared.UsePath(viper.GetString("storage.install"), true) + args[0]
 
 		if _, err := os.Stat(installDir); os.IsNotExist(err) {

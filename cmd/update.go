@@ -19,6 +19,9 @@ var appUpdateCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		forceFlag := cmd.Flag("force").Value.String()
 		if forceFlag == "true" {
+			lock := shared.HandleLock()
+			defer lock.Unlock()
+
 			shared.AppUpdate(shared.Version)
 		} else {
 			fmt.Println("WARNING! You should not use the app-update command unless you have a manual installation of Proto.")
