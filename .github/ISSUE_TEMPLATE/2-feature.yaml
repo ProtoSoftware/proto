@@ -1,47 +1,42 @@
-name: 🐛 Bug report
-title: 'Bug: '
-description: Report unintentional or broken behaviour
-labels: 'type | bug' 
-body:
+name: ✨ Feature Request
+description: Request a new feature or an improvement to an existing one.
+title: 'Feature: '
+labels: 'type | feature'
+body: 
+
 - type: markdown
   attributes:
     value: |
-      Thank you for submitting a bug report!
+      Thank you for submitting a feature request!
 
-      Please fill out the template below to make it easier to debug your problem.
+      Please fill out the template below to make it easier to work on your issue.
       
 - type: checkboxes
   attributes:
     label: Preflight Checklist
     description: Please ensure you've completed all of the following.
     options:
-      - label: I have searched for existing issues and cannot find mine, or existing issues do not fit my report.
+      - label: I have searched for existing issues and cannot find mine, or existing issues do not fit.
         required: true
-        
-- type: textarea
+
+- type: dropdown
   attributes:
-    label: Bug Behavior
-    description: A description of what happens when the bug occurs.
+    label: New or Existing?
+    description: Is this a new feature you're suggesting, or is it an improvement to an existing one?
+    options:
+      - New feature
+      - Improvement to existing feature 
   validations:
     required: true
-    
+  
 - type: textarea
   attributes:
-    label: Expected Behavior
-    description: A description of what you expected to happen.
-  validations:
+    label: Summary of the feature
+  validations: 
     required: true
-    
+
 - type: textarea
   attributes:
-    label: Steps To Reproduce
-    description: Steps to reproduce the behavior if it is not self-explanatory.
-    placeholder: |
-      1. With this setup '...'
-      2. Run '...'
-      3. Error caused '...'
-      
-- type: textarea
-  attributes:
-    label: Additional Information
-    description: Links? References? Anything that will give us more context about the issue that you are encountering!
+    label: Why should this be added or changed?
+  validations: 
+    required: true
