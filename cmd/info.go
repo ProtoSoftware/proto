@@ -41,6 +41,7 @@ var infoCmd = &cobra.Command{
 
 		if err != nil {
 			fmt.Println("That release does not exist on the given source.")
+			os.Exit(1)
 		}
 
 		// Print the release data.
