@@ -15,7 +15,7 @@ import (
 
 // infoCmd represents the info command
 var infoCmd = &cobra.Command{
-	Use:   "info",
+	Use:   "info <tag>",
 	Short: "Shows information about the given release.",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
