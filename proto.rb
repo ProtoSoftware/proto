@@ -6,30 +6,30 @@ class Proto < Formula
   desc "Proto compatability tool manager
 "
   homepage "https://github.com/ProtoSoftware/proto"
-  version "0.9.1"
+  version "0.9.2"
   license "GPL-3.0-only"
   depends_on :linux
 
   on_linux do
     if Hardware::CPU.arm? && !Hardware::CPU.is_64_bit?
-      url "https://github.com/ProtoSoftware/proto/releases/download/v0.9.1/proto_linux_arm.zip"
-      sha256 "f59e90b8dfee1557def21fd52bdb03e853a5a65cbf4f75b87ab89daae5303677"
+      url "https://github.com/ProtoSoftware/proto/releases/download/v0.9.2/proto_linux_arm.zip"
+      sha256 "91a9672dd89abf8a220fcee8c547abb453a0b1b2bea00f3b7c9329f8ce9dc4f2"
 
       def install
         bin.install "proto"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/ProtoSoftware/proto/releases/download/v0.9.1/proto_linux_arm64.zip"
-      sha256 "0292a7639db85a2ba1202f709dd4d7f3a15a4de7c727fe5bc987c5d14dd4847d"
+      url "https://github.com/ProtoSoftware/proto/releases/download/v0.9.2/proto_linux_arm64.zip"
+      sha256 "0a476864eeab0d285d0fc119f1d87cdd09ccf8fe707b6b712d541d1af284f4d9"
 
       def install
         bin.install "proto"
       end
     end
     if Hardware::CPU.intel?
-      url "https://github.com/ProtoSoftware/proto/releases/download/v0.9.1/proto_linux_amd64.zip"
-      sha256 "97fef476532f93801b20e5bf7c3c10359ac13ac2fb4b5450bf5368ae9752eccf"
+      url "https://github.com/ProtoSoftware/proto/releases/download/v0.9.2/proto_linux_amd64.zip"
+      sha256 "a683ef8c71bb8e0784b14431bbaf9d14673527790809ffd7c4dcc3c044b0dbd7"
 
       def install
         bin.install "proto"
