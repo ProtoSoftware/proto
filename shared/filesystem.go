@@ -67,7 +67,6 @@ func DownloadFile(path, url string) (os.FileInfo, error) {
 		if err != nil {
 			return nil, err
 		}
-
 		Debug("DownloadFile: Created directory: " + filepath.Dir(path))
 	}
 
@@ -115,6 +114,16 @@ func DownloadFile(path, url string) (os.FileInfo, error) {
 
 // Attempts to exract the tar with gnu-tar.
 func ExtractTar(tarPath, extractPath string) error {
+	
+	// If path doesnt exist create it
+	if _, err := os.Stat(extractPath); os.IsNotExist(err) {
+		err := os.MkdirAll(filepath.Dir(extractPath), os.ModePerm)
+		if err != nil {
+			return err
+		}
+		Debug("DownloadFile: Created directory: " + filepath.Dir(extractPath))
+	}
+	
 	cmd := exec.Command("tar", "-xf", tarPath, "-C", extractPath)
 	err := cmd.Start()
 
